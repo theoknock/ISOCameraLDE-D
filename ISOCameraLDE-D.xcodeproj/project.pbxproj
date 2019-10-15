@@ -3,32 +3,59 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B99AA86523548A8400274D3D /* ScaleSliderScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */; };
+		B99AA8682354E12500274D3D /* CameraControls.m in Sources */ = {isa = PBXBuildFile; fileRef = B99AA8672354E12500274D3D /* CameraControls.m */; };
 		B9D12BA1235402F30017DD25 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BA0235402F30017DD25 /* AppDelegate.m */; };
 		B9D12BA4235402F30017DD25 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BA3235402F30017DD25 /* SceneDelegate.m */; };
-		B9D12BA7235402F30017DD25 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BA6235402F30017DD25 /* ViewController.m */; };
 		B9D12BAA235402F30017DD25 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9D12BA8235402F30017DD25 /* Main.storyboard */; };
 		B9D12BAC235402F40017DD25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9D12BAB235402F40017DD25 /* Assets.xcassets */; };
 		B9D12BAF235402F40017DD25 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9D12BAD235402F40017DD25 /* LaunchScreen.storyboard */; };
 		B9D12BB2235402F40017DD25 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BB1235402F40017DD25 /* main.m */; };
+		B9D12BCC235403C60017DD25 /* ScaleSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BB8235403C40017DD25 /* ScaleSliderView.m */; };
+		B9D12BCD235403C60017DD25 /* CameraPropertiesDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BBA235403C40017DD25 /* CameraPropertiesDispatcher.m */; };
+		B9D12BCE235403C60017DD25 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BBD235403C50017DD25 /* CameraView.m */; };
+		B9D12BCF235403C60017DD25 /* ScaleSliderLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BBE235403C50017DD25 /* ScaleSliderLayer.m */; };
+		B9D12BD1235403C60017DD25 /* ScaleSliderOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BC2235403C50017DD25 /* ScaleSliderOverlayView.m */; };
+		B9D12BD2235403C60017DD25 /* ScaleSliderControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BC5235403C50017DD25 /* ScaleSliderControlView.m */; };
+		B9D12BD3235403C60017DD25 /* ScaleSliderOverlayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BC7235403C50017DD25 /* ScaleSliderOverlayLayer.m */; };
+		B9D12BD5235403C60017DD25 /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BC9235403C60017DD25 /* CameraViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B99AA86323548A8400274D3D /* ScaleSliderScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScaleSliderScrollView.h; sourceTree = "<group>"; };
+		B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderScrollView.m; sourceTree = "<group>"; };
+		B99AA8662354E12500274D3D /* CameraControls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraControls.h; sourceTree = "<group>"; };
+		B99AA8672354E12500274D3D /* CameraControls.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraControls.m; sourceTree = "<group>"; };
 		B9D12B9C235402F30017DD25 /* ISOCameraLDE-D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ISOCameraLDE-D.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9D12B9F235402F30017DD25 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9D12BA0235402F30017DD25 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B9D12BA2235402F30017DD25 /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		B9D12BA3235402F30017DD25 /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
-		B9D12BA5235402F30017DD25 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B9D12BA6235402F30017DD25 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		B9D12BA9235402F30017DD25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B9D12BAB235402F40017DD25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B9D12BAE235402F40017DD25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B9D12BB0235402F40017DD25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9D12BB1235402F40017DD25 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B9D12BB8235403C40017DD25 /* ScaleSliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderView.m; sourceTree = "<group>"; };
+		B9D12BB9235403C40017DD25 /* ScaleSliderOverlayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderOverlayLayer.h; sourceTree = "<group>"; };
+		B9D12BBA235403C40017DD25 /* CameraPropertiesDispatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraPropertiesDispatcher.m; sourceTree = "<group>"; };
+		B9D12BBC235403C50017DD25 /* ScaleSliderLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderLayer.h; sourceTree = "<group>"; };
+		B9D12BBD235403C50017DD25 /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
+		B9D12BBE235403C50017DD25 /* ScaleSliderLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderLayer.m; sourceTree = "<group>"; };
+		B9D12BC0235403C50017DD25 /* ScaleSliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderView.h; sourceTree = "<group>"; };
+		B9D12BC1235403C50017DD25 /* ScaleSliderControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderControlView.h; sourceTree = "<group>"; };
+		B9D12BC2235403C50017DD25 /* ScaleSliderOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderOverlayView.m; sourceTree = "<group>"; };
+		B9D12BC3235403C50017DD25 /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
+		B9D12BC4235403C50017DD25 /* CameraPropertiesDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraPropertiesDispatcher.h; sourceTree = "<group>"; };
+		B9D12BC5235403C50017DD25 /* ScaleSliderControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderControlView.m; sourceTree = "<group>"; };
+		B9D12BC7235403C50017DD25 /* ScaleSliderOverlayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderOverlayLayer.m; sourceTree = "<group>"; };
+		B9D12BC9235403C60017DD25 /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; wrapsLines = 0; };
+		B9D12BCA235403C60017DD25 /* ScaleSliderOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderOverlayView.h; sourceTree = "<group>"; };
+		B9D12BCB235403C60017DD25 /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +76,7 @@
 				B9D12B9D235402F30017DD25 /* Products */,
 			);
 			sourceTree = "<group>";
+			wrapsLines = 0;
 		};
 		B9D12B9D235402F30017DD25 /* Products */ = {
 			isa = PBXGroup;
@@ -65,8 +93,26 @@
 				B9D12BA0235402F30017DD25 /* AppDelegate.m */,
 				B9D12BA2235402F30017DD25 /* SceneDelegate.h */,
 				B9D12BA3235402F30017DD25 /* SceneDelegate.m */,
-				B9D12BA5235402F30017DD25 /* ViewController.h */,
-				B9D12BA6235402F30017DD25 /* ViewController.m */,
+				B9D12BCB235403C60017DD25 /* CameraViewController.h */,
+				B9D12BC9235403C60017DD25 /* CameraViewController.m */,
+				B9D12BC3235403C50017DD25 /* CameraView.h */,
+				B9D12BBD235403C50017DD25 /* CameraView.m */,
+				B9D12BC4235403C50017DD25 /* CameraPropertiesDispatcher.h */,
+				B9D12BBA235403C40017DD25 /* CameraPropertiesDispatcher.m */,
+				B99AA8662354E12500274D3D /* CameraControls.h */,
+				B99AA8672354E12500274D3D /* CameraControls.m */,
+				B99AA86323548A8400274D3D /* ScaleSliderScrollView.h */,
+				B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */,
+				B9D12BC1235403C50017DD25 /* ScaleSliderControlView.h */,
+				B9D12BC5235403C50017DD25 /* ScaleSliderControlView.m */,
+				B9D12BC0235403C50017DD25 /* ScaleSliderView.h */,
+				B9D12BB8235403C40017DD25 /* ScaleSliderView.m */,
+				B9D12BBC235403C50017DD25 /* ScaleSliderLayer.h */,
+				B9D12BBE235403C50017DD25 /* ScaleSliderLayer.m */,
+				B9D12BCA235403C60017DD25 /* ScaleSliderOverlayView.h */,
+				B9D12BC2235403C50017DD25 /* ScaleSliderOverlayView.m */,
+				B9D12BB9235403C40017DD25 /* ScaleSliderOverlayLayer.h */,
+				B9D12BC7235403C50017DD25 /* ScaleSliderOverlayLayer.m */,
 				B9D12BA8235402F30017DD25 /* Main.storyboard */,
 				B9D12BAB235402F40017DD25 /* Assets.xcassets */,
 				B9D12BAD235402F40017DD25 /* LaunchScreen.storyboard */,
@@ -111,7 +157,7 @@
 				};
 			};
 			buildConfigurationList = B9D12B97235402F30017DD25 /* Build configuration list for PBXProject "ISOCameraLDE-D" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 11.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -146,8 +192,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9D12BA7235402F30017DD25 /* ViewController.m in Sources */,
+				B9D12BCC235403C60017DD25 /* ScaleSliderView.m in Sources */,
+				B9D12BD3235403C60017DD25 /* ScaleSliderOverlayLayer.m in Sources */,
+				B9D12BCE235403C60017DD25 /* CameraView.m in Sources */,
+				B9D12BD1235403C60017DD25 /* ScaleSliderOverlayView.m in Sources */,
+				B9D12BD5235403C60017DD25 /* CameraViewController.m in Sources */,
+				B9D12BCD235403C60017DD25 /* CameraPropertiesDispatcher.m in Sources */,
+				B99AA8682354E12500274D3D /* CameraControls.m in Sources */,
+				B9D12BD2235403C60017DD25 /* ScaleSliderControlView.m in Sources */,
 				B9D12BA1235402F30017DD25 /* AppDelegate.m in Sources */,
+				B9D12BCF235403C60017DD25 /* ScaleSliderLayer.m in Sources */,
+				B99AA86523548A8400274D3D /* ScaleSliderScrollView.m in Sources */,
 				B9D12BB2235402F40017DD25 /* main.m in Sources */,
 				B9D12BA4235402F30017DD25 /* SceneDelegate.m in Sources */,
 			);
@@ -298,7 +353,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.blogspot.demonicactivity.bush.alan.james.ISOCameraLDE-D";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -315,7 +370,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.blogspot.demonicactivity.bush.alan.james.ISOCameraLDE-D";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

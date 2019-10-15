@@ -1,24 +1,199 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y19-1Y-72S">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15508"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Camera View Controller-->
+        <scene sceneID="nyw-Yz-TQA">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                <viewController id="Y19-1Y-72S" customClass="CameraViewController" sceneMemberID="viewController">
+                    <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="ndl-JM-lTx">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <subviews>
+                            <view multipleTouchEnabled="YES" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="9Tc-H2-Ura" customClass="CameraView">
+                                <rect key="frame" x="0.0" y="44" width="414" height="736"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" secondItem="9Tc-H2-Ura" secondAttribute="width" multiplier="16:9" priority="750" id="HVr-Jh-jHG"/>
+                                </constraints>
+                            </view>
+                            <view opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KS8-cd-Ctu" userLabel="0 - Camera Controls" customClass="CameraControls">
+                                <rect key="frame" x="0.0" y="780" width="414" height="82"/>
+                                <subviews>
+                                    <stackView opaque="NO" multipleTouchEnabled="YES" tag="7" contentMode="scaleToFill" distribution="equalCentering" alignment="bottom" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fzc-kq-heY" userLabel="7 - Button Stack View">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
+                                        <subviews>
+                                            <button opaque="NO" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g1A-OK-R55" userLabel="1 - Record">
+                                                <rect key="frame" x="0.0" y="33.5" width="49.5" height="48.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                <state key="normal" image="camera.circle" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                    </preferredSymbolConfiguration>
+                                                </state>
+                                            </button>
+                                            <button opaque="NO" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QDl-iO-DcM" userLabel="2 - Exposure Duration">
+                                                <rect key="frame" x="73" y="33.5" width="49.5" height="48.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                <state key="normal" image="timer" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                    </preferredSymbolConfiguration>
+                                                </state>
+                                            </button>
+                                            <button opaque="NO" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jtu-IK-0Va" userLabel="3 - ISO">
+                                                <rect key="frame" x="144.5" y="30.5" width="52.5" height="51.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                <state key="normal" image="sun.max" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                    </preferredSymbolConfiguration>
+                                                </state>
+                                            </button>
+                                            <button opaque="NO" multipleTouchEnabled="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b1Y-dK-Ek8" userLabel="4 - Focus">
+                                                <rect key="frame" x="218.5" y="33.5" width="49.5" height="48.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                <state key="normal" image="viewfinder.circle" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                    </preferredSymbolConfiguration>
+                                                </state>
+                                            </button>
+                                            <button opaque="NO" multipleTouchEnabled="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VLy-Kw-c75" userLabel="5 - Torch">
+                                                <rect key="frame" x="291.5" y="33.5" width="49.5" height="48.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                <state key="normal" image="bolt.circle" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                    </preferredSymbolConfiguration>
+                                                </state>
+                                            </button>
+                                            <button opaque="NO" multipleTouchEnabled="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJy-J4-1w3" userLabel="6 - Zoom">
+                                                <rect key="frame" x="364.5" y="33.5" width="49.5" height="48.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                                <state key="normal" image="magnifyingglass.circle" catalog="system">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                    </preferredSymbolConfiguration>
+                                                </state>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </stackView>
+                                    <view hidden="YES" opaque="NO" multipleTouchEnabled="YES" tag="8" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtW-vy-3Vi" userLabel="8 - Scale Slider Control" customClass="ScaleSliderControlView">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
+                                        <subviews>
+                                            <scrollView opaque="NO" clipsSubviews="YES" tag="9" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaH-y2-z6H" userLabel="9 - Scale Slider Scroll View" customClass="ScaleSliderScrollView">
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
+                                                <subviews>
+                                                    <view opaque="NO" tag="10" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XVH-36-NFH" userLabel="10 - Scale Slider View" customClass="ScaleSliderView">
+                                                        <rect key="frame" x="0.0" y="0.0" width="828" height="82"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </view>
+                                                    <view opaque="NO" tag="11" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BQy-PF-1RZ" userLabel="11 - Scale Slider View Overlay" customClass="ScaleSliderOverlayView">
+                                                        <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstItem="BQy-PF-1RZ" firstAttribute="centerY" secondItem="wcv-7S-c8N" secondAttribute="centerY" id="0Uw-gg-DVZ"/>
+                                                    <constraint firstItem="BQy-PF-1RZ" firstAttribute="width" secondItem="wcv-7S-c8N" secondAttribute="width" id="1rf-A9-3qm"/>
+                                                    <constraint firstItem="XVH-36-NFH" firstAttribute="trailing" secondItem="RxT-Gg-FKZ" secondAttribute="trailing" id="C6B-0c-ivC"/>
+                                                    <constraint firstItem="BQy-PF-1RZ" firstAttribute="height" secondItem="wcv-7S-c8N" secondAttribute="height" id="F4H-0E-YyK"/>
+                                                    <constraint firstItem="BQy-PF-1RZ" firstAttribute="bottom" secondItem="wcv-7S-c8N" secondAttribute="bottom" id="HRy-pf-hpg"/>
+                                                    <constraint firstItem="BQy-PF-1RZ" firstAttribute="centerX" secondItem="wcv-7S-c8N" secondAttribute="centerX" id="RTs-vu-mEu"/>
+                                                    <constraint firstItem="XVH-36-NFH" firstAttribute="bottom" secondItem="wcv-7S-c8N" secondAttribute="bottom" id="W1b-JE-v1F"/>
+                                                    <constraint firstItem="XVH-36-NFH" firstAttribute="top" secondItem="wcv-7S-c8N" secondAttribute="top" id="a2Z-Ib-Hjo"/>
+                                                    <constraint firstItem="BQy-PF-1RZ" firstAttribute="trailing" secondItem="wcv-7S-c8N" secondAttribute="trailing" id="cbt-vm-YPI"/>
+                                                    <constraint firstItem="BQy-PF-1RZ" firstAttribute="top" secondItem="wcv-7S-c8N" secondAttribute="top" id="gw8-0B-oHd"/>
+                                                    <constraint firstItem="XVH-36-NFH" firstAttribute="leading" secondItem="RxT-Gg-FKZ" secondAttribute="leading" id="hmn-6H-qII"/>
+                                                    <constraint firstItem="BQy-PF-1RZ" firstAttribute="leading" secondItem="wcv-7S-c8N" secondAttribute="leading" id="rZa-HO-aW4"/>
+                                                </constraints>
+                                                <viewLayoutGuide key="contentLayoutGuide" id="RxT-Gg-FKZ"/>
+                                                <viewLayoutGuide key="frameLayoutGuide" id="wcv-7S-c8N"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="Y19-1Y-72S" id="ZVa-4Y-CU0"/>
+                                                </connections>
+                                            </scrollView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="BaH-y2-z6H" firstAttribute="bottom" secondItem="jtW-vy-3Vi" secondAttribute="bottom" id="AyR-hh-b0n"/>
+                                            <constraint firstItem="BaH-y2-z6H" firstAttribute="top" secondItem="jtW-vy-3Vi" secondAttribute="top" id="B37-EN-lD6"/>
+                                            <constraint firstItem="BaH-y2-z6H" firstAttribute="leading" secondItem="jtW-vy-3Vi" secondAttribute="leading" id="NLZ-uP-TeH"/>
+                                            <constraint firstItem="BaH-y2-z6H" firstAttribute="trailing" secondItem="jtW-vy-3Vi" secondAttribute="trailing" id="zGB-SG-Ypo"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="RxT-Gg-FKZ" firstAttribute="height" secondItem="Fzc-kq-heY" secondAttribute="height" id="0iB-tC-7pl"/>
+                                    <constraint firstItem="jtW-vy-3Vi" firstAttribute="leading" secondItem="KS8-cd-Ctu" secondAttribute="leading" id="4Fa-4q-YBV"/>
+                                    <constraint firstItem="jtW-vy-3Vi" firstAttribute="bottom" secondItem="KS8-cd-Ctu" secondAttribute="bottom" id="8PT-ds-LuZ"/>
+                                    <constraint firstItem="jtW-vy-3Vi" firstAttribute="trailing" secondItem="KS8-cd-Ctu" secondAttribute="trailing" id="I3d-3k-rEC"/>
+                                    <constraint firstItem="Fzc-kq-heY" firstAttribute="centerY" secondItem="KS8-cd-Ctu" secondAttribute="centerY" id="Ic1-fd-cvb"/>
+                                    <constraint firstItem="Fzc-kq-heY" firstAttribute="bottom" secondItem="KS8-cd-Ctu" secondAttribute="bottom" id="MmS-bu-ZO5"/>
+                                    <constraint firstItem="Fzc-kq-heY" firstAttribute="centerX" secondItem="KS8-cd-Ctu" secondAttribute="centerX" id="NIV-qN-BbR"/>
+                                    <constraint firstItem="Fzc-kq-heY" firstAttribute="trailing" secondItem="KS8-cd-Ctu" secondAttribute="trailing" id="db7-xW-fKA"/>
+                                    <constraint firstItem="wcv-7S-c8N" firstAttribute="height" secondItem="Fzc-kq-heY" secondAttribute="height" id="jD4-cs-1aD"/>
+                                    <constraint firstItem="Fzc-kq-heY" firstAttribute="top" secondItem="KS8-cd-Ctu" secondAttribute="top" id="lD8-D2-ajz"/>
+                                    <constraint firstItem="wcv-7S-c8N" firstAttribute="width" secondItem="Fzc-kq-heY" secondAttribute="width" id="lew-uv-cvU"/>
+                                    <constraint firstItem="RxT-Gg-FKZ" firstAttribute="width" secondItem="Fzc-kq-heY" secondAttribute="width" multiplier="2" id="sTb-Qr-cZw"/>
+                                    <constraint firstItem="Fzc-kq-heY" firstAttribute="leading" secondItem="KS8-cd-Ctu" secondAttribute="leading" id="tus-OO-Q2W"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="9Tc-H2-Ura" firstAttribute="leading" secondItem="ddi-Nz-8yQ" secondAttribute="leading" id="BOV-yI-hWf"/>
+                            <constraint firstItem="KS8-cd-Ctu" firstAttribute="centerX" secondItem="ddi-Nz-8yQ" secondAttribute="centerX" id="DuS-qB-kZb"/>
+                            <constraint firstItem="KS8-cd-Ctu" firstAttribute="leading" secondItem="ddi-Nz-8yQ" secondAttribute="leading" id="Fjb-lB-WKr"/>
+                            <constraint firstItem="9Tc-H2-Ura" firstAttribute="trailing" secondItem="ddi-Nz-8yQ" secondAttribute="trailing" id="G5A-17-2B8"/>
+                            <constraint firstItem="9Tc-H2-Ura" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="ddi-Nz-8yQ" secondAttribute="bottom" id="KZ4-qY-qga"/>
+                            <constraint firstItem="9Tc-H2-Ura" firstAttribute="height" relation="lessThanOrEqual" secondItem="ddi-Nz-8yQ" secondAttribute="height" id="TdP-rI-plb"/>
+                            <constraint firstItem="jtW-vy-3Vi" firstAttribute="top" secondItem="9Tc-H2-Ura" secondAttribute="bottom" id="d8c-rg-hbv"/>
+                            <constraint firstItem="9Tc-H2-Ura" firstAttribute="width" secondItem="ddi-Nz-8yQ" secondAttribute="width" id="dyq-IV-kdO"/>
+                            <constraint firstItem="KS8-cd-Ctu" firstAttribute="trailing" secondItem="ddi-Nz-8yQ" secondAttribute="trailing" id="eCN-w9-NyC"/>
+                            <constraint firstItem="KS8-cd-Ctu" firstAttribute="top" secondItem="9Tc-H2-Ura" secondAttribute="bottom" id="icm-qv-GQM"/>
+                            <constraint firstItem="9Tc-H2-Ura" firstAttribute="top" secondItem="ddi-Nz-8yQ" secondAttribute="top" id="k2e-An-Sif"/>
+                            <constraint firstItem="KS8-cd-Ctu" firstAttribute="bottom" secondItem="ddi-Nz-8yQ" secondAttribute="bottom" id="lQa-6N-8kL"/>
+                            <constraint firstItem="9Tc-H2-Ura" firstAttribute="centerX" secondItem="ddi-Nz-8yQ" secondAttribute="centerX" id="wXk-ez-xxI"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ddi-Nz-8yQ"/>
                     </view>
+                    <connections>
+                        <outlet property="cameraControls" destination="KS8-cd-Ctu" id="hys-gN-nSC"/>
+                        <outlet property="cameraView" destination="9Tc-H2-Ura" id="qm6-Ag-R2Q"/>
+                        <outlet property="scaleSliderControlView" destination="jtW-vy-3Vi" id="w0m-JE-mNK"/>
+                        <outlet property="scaleSliderOverlayView" destination="BQy-PF-1RZ" id="JSx-1Y-OsC"/>
+                        <outlet property="scaleSliderScrollView" destination="BaH-y2-z6H" id="0cP-rN-hdz"/>
+                        <outlet property="scaleSliderView" destination="XVH-36-NFH" id="R4S-GB-mv0"/>
+                        <outletCollection property="cameraPropertyButtons" destination="IJy-J4-1w3" id="5Ir-fj-R8f"/>
+                        <outletCollection property="cameraPropertyButtons" destination="VLy-Kw-c75" id="Wif-rQ-ZFo"/>
+                        <outletCollection property="cameraPropertyButtons" destination="b1Y-dK-Ek8" id="PiO-6Q-xZ1"/>
+                        <outletCollection property="cameraPropertyButtons" destination="jtu-IK-0Va" id="P45-tM-Rev"/>
+                        <outletCollection property="cameraPropertyButtons" destination="QDl-iO-DcM" id="JPw-pd-nm4"/>
+                        <outletCollection property="cameraPropertyButtons" destination="g1A-OK-R55" id="7bO-hz-riw"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TlQ-kz-zYe" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-1639.2857142857142" y="-252.17391304347828"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="bolt.circle" catalog="system" width="64" height="60"/>
+        <image name="camera.circle" catalog="system" width="64" height="60"/>
+        <image name="magnifyingglass.circle" catalog="system" width="64" height="60"/>
+        <image name="sun.max" catalog="system" width="64" height="62"/>
+        <image name="timer" catalog="system" width="64" height="60"/>
+        <image name="viewfinder.circle" catalog="system" width="64" height="60"/>
+    </resources>
 </document>
