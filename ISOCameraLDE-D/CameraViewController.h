@@ -17,14 +17,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CameraViewController : UIViewController <UIGestureRecognizerDelegate, UIScrollViewDelegate>
+typedef struct{
+    void *cameraPropertyValue;
+} CameraPropertyValue;
 
-@property (weak, nonatomic) IBOutlet CameraControls *cameraControls;
+@interface CameraViewController : UIViewController <UIGestureRecognizerDelegate, UIScrollViewDelegate, ScaleSliderControlViewDelegate>
+
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cameraPropertyButtons;
+@property (weak, nonatomic) IBOutlet CameraControls *cameraControls;
 @property (weak, nonatomic) IBOutlet ScaleSliderControlView *scaleSliderControlView;
 @property (weak, nonatomic) IBOutlet ScaleSliderScrollView *scaleSliderScrollView;
 @property (weak, nonatomic) IBOutlet ScaleSliderView *scaleSliderView;
 @property (weak, nonatomic) IBOutlet ScaleSliderOverlayView *scaleSliderOverlayView;
+
+- (void)handleTouchForButtonWithCameraProperty:(CameraProperty)cameraProperty;
 
 @property (strong, nonatomic) __block AVCaptureDevice *videoDevice;
 
@@ -44,6 +50,26 @@ NS_ASSUME_NONNULL_BEGIN
 //- (SetCameraPropertyValueBlock)setCameraProperty:(CameraProperty)cameraProperty;
 //- (float)valueForCameraProperty:(CameraProperty)cameraProperty;
 
+@property (strong, nonatomic) __block dispatch_source_t set_camera_property_event;
+@property (weak, nonatomic) IBOutlet UIButton *recordCameraPropertyButton;
+@property (weak, nonatomic) IBOutlet UIButton *exposureDurationCameraPropertyButton;
+@property (weak, nonatomic) IBOutlet UIButton *ISOCameraPropertyButton;
+@property (weak, nonatomic) IBOutlet UIButton *lensPositionCameraPropertyButton;
+@property (weak, nonatomic) IBOutlet UIButton *torchLevelCameraPropertyButton;
+@property (weak, nonatomic) IBOutlet UIButton *zoomFactorCameraPropertyButton;
+
+@property (strong, nonatomic) UIButton * _Nullable lockedCameraPropertyButton;
+@property (strong, nonatomic) dispatch_queue_t button_setting_queue;
+@property (strong, nonatomic) dispatch_semaphore_t button_lock_semaphore;
+
+@property (nonatomic, strong) __block dispatch_queue_t dispatch_source_queue_value_getter;
+@property (nonatomic, strong) __block dispatch_source_t dispatch_source_value_getter;
+
+@property (strong, nonatomic) dispatch_queue_t textureQueue;
+@property (strong, nonatomic) __block dispatch_source_t textureQueueEvent;
+
+@property (strong, nonatomic) IBOutletCollection(UIView) NSArray *scaleSliderControlViews;
+@property (strong, nonatomic) CATextLayer *scaleSliderControlTextLayer;
 @end
 
 NS_ASSUME_NONNULL_END

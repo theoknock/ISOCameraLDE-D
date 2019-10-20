@@ -8,6 +8,7 @@
 
 #import "CameraPropertiesDispatcher.h"
 
+/// <#Description#>
 @implementation CameraPropertiesDispatcher
 
 //@synthesize cameraPropertyValueProvider = cameraPropertyValueProvider_;
@@ -24,36 +25,30 @@
     return _sharedInstance;
 }
 
-
-static void * key = "CameraPropertyVideoZoomFactor";
-static void * value = "0.6";
-
-// TO-DO: Create a shared instance for producer-consumer pairs;
-//        the label parameter identifies the relationship between producers and consumers
-//        use the label as a key for identifying a queue in a collection AND
-//        as a key to a pair of arrays pointing to producer and consumer that share the queue
 dispatch_queue_t (^dispatch_source_queue)(const char * _Nullable label) = ^dispatch_queue_t(const char * _Nullable label)
 {
     dispatch_queue_t q = dispatch_queue_create_with_target(label, DISPATCH_QUEUE_CONCURRENT, dispatch_get_main_queue());
     return q;
 };
 
-void (^(^event_handler_block)(void))(void) = ^{
-    return ^{
+float (^event_handler_block_param)(CameraProperty) = ^float (CameraProperty property) {
+    printf("\nExecuting event handler block param\n");
+    return 1.0;
+};
+
+void (^(^event_handler_block_block_param)(float (^)(CameraProperty)))(void) = ^(float(^event_handler_block_param)(CameraProperty)) {
+    printf("\nExecuting event handler block (before return value)\n");
+    event_handler_block_param(1.0);
+    return ^  {
+        printf("\nExecuting event handler block (inside return value)\n");
+        event_handler_block_param(1.0);
         
-    };
-};
-
-float (^(^event_handler_block_param)(void (^)(void)))(CameraProperty) = ^(void(^event_handler_block)(void)) { //
-     return ^float(CameraProperty cameraPropertyValue) {
-        // block passed as the event handler to the dispatch source
-         return 1.0;
-    };
-};
-
-void (^(^dispatch_source_event_handler)(float (^)(CameraProperty)))(void) = ^(float (^cameraPropertyValue)(CameraProperty)) {
-    return ^{
-        float value = cameraPropertyValue(CameraPropertyLensPosition);
+        //             NSLog(@"CameraProperty %lu", dispatch_source_get_data(source));
+        //             dispatch_async(queue, ^{
+        //                 NSLog(@"%s", dispatch_queue_get_specific(queue, key));
+        //             });
+        //         float value = event_handler_block_par
+        // Code to execute plus block (passed as parameter) to execute
     };
 };
 
@@ -61,14 +56,69 @@ dispatch_source_t (^dispatch_source)(void (^)(void)) = ^dispatch_source_t(void (
 {
     dispatch_queue_t queue   = dispatch_source_queue("Dispatch Queue");
     dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_DATA_ADD, 0, 0, dispatch_get_main_queue());
-    dispatch_source_set_event_handler(source, dispatch_source_event_handler(event_handler_block_param(event_handler_block())));
+    //    dispatch_source_set_event_handler(source, dispatch_source_event_handler(event_handler_block_param(event_handler_block())));
     dispatch_set_target_queue(source, queue);
     dispatch_resume(source);
     
     return source;
 };
+//
+//typedef float(^ValueForCameraPropertyValue)(CameraProperty property);
+//
+//ValueForCameraProperty cameraPropertyValue;
+//
+//value = ^float (CameraProperty property) {
+//    return (float)property;
+//};
+//
+
+void (^(^dispatch_source_event_handler)(float (^)(CameraProperty)))(void) = ^(float (^camera_property_value)(CameraProperty)) {
+    return ^ {
+        
+    };
+};
+
+float (^(^dispatch_source_event_parameter)(float (^)(CameraProperty)))(CameraProperty) = ^(float (^camera_property_value)(CameraProperty)) {
+    return ^float(CameraProperty property) {
+        return camera_property_value(property);
+    };
+};
+
+float (^camera_property_value)(CameraProperty) = ^float (CameraProperty property) {
+    return (float)property;
+};
+
+- (void)test {
+    camera_property_value(CameraPropertyTorchLevel);
+    dispatch_source_event_handler(camera_property_value);
+}
+
+float (^(^(^(^valueForCameraProperty)(void))(void))(float (^__strong)(CameraProperty)))(CameraProperty) = ^{
+    return ^ {
+        return ^(float (^cameraPropertyValue)(CameraProperty)) {
+            return ^float (CameraProperty property) {
+                return camera_property_value(property);
+            };
+        };
+    };
+};
 
 
+//float (^(^block_parameter)(float (^)(CameraProperty)))(CameraProperty) = ^float(CameraProperty property) {
+//    return ^(float (^cameraPropertyValue)(CameraProperty)) {
+//
+//    };
+//};
+
+
+// The event handler block set for the dispatch source, submitted to the source's target queue in response to the arrival of an event.
+// It returns a void-void block per the parameter requirements of dispatch_set_event_handler_block, but takes another block that it executes
+// once it itself is executed. This allows dynamic properties to be passed into the event handler block through its block parameter.
+//void (^(^dispatch_source_set_event_handler_parameter)(float (^)(CameraProperty)))(void) = ^(float (^cameraPropertyValue)(CameraProperty)) {
+//    return ^{
+//
+//    };
+//};
 
 - (instancetype)init
 {
@@ -78,15 +128,12 @@ dispatch_source_t (^dispatch_source)(void (^)(void)) = ^dispatch_source_t(void (
     if (self)
     {
         static void * key = "CameraPropertyVideoZoomFactor";
+        NSLog(@"%lu", (NSUInteger)key);
         static void * value = "0.6";
         dispatch_queue_t queue = self.dispatch_source_queue;
         dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_DATA_ADD, 0, 0, dispatch_get_main_queue());
-        dispatch_source_set_event_handler(source, ^{
-            NSLog(@"CameraProperty %lu", dispatch_source_get_data(source));
-            dispatch_async(queue, ^{
-                NSLog(@"%s", dispatch_queue_get_specific(queue, key));
-            });
-        });
+        dispatch_source_set_event_handler(source, dispatch_source_event_handler(camera_property_value));
+        
         dispatch_set_target_queue(source, queue);
         dispatch_resume(source);
         
@@ -161,10 +208,6 @@ dispatch_source_t (^dispatch_source)(void (^)(void)) = ^dispatch_source_t(void (
     });
     
     return dispatch_source;
-}
-// Producer sends a
-float normalize(float unscaledNum, float minAllowed, float maxAllowed, float min, float max) {
-    return (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed;
 }
 
 NSInteger productionCount;

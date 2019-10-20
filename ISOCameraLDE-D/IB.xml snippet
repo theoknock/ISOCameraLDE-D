@@ -1,0 +1,56 @@
+<subviews>
+    <button opaque="NO" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g1A-OK-R55" userLabel="1 - Record">
+        <rect key="frame" x="0.0" y="33.5" width="49.5" height="48.5"/>
+        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+        <state key="normal" image="camera.circle" catalog="system">
+            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+            </preferredSymbolConfiguration>
+        </state>
+    </button>
+    <button opaque="NO" multipleTouchEnabled="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QDl-iO-DcM" userLabel="2 - Exposure Duration">
+        <rect key="frame" x="73" y="33.5" width="49.5" height="48.5"/>
+        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+        <state key="normal" image="timer" catalog="system">
+            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+            </preferredSymbolConfiguration>
+        </state>
+    </button>
+    <button opaque="NO" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jtu-IK-0Va" userLabel="3 - ISO">
+        <rect key="frame" x="144.5" y="30.5" width="52.5" height="51.5"/>
+        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+        <state key="normal" image="sun.max" catalog="system">
+            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+            </preferredSymbolConfiguration>
+        </state>
+    </button>
+    <button opaque="NO" multipleTouchEnabled="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b1Y-dK-Ek8" userLabel="4 - Focus">
+        <rect key="frame" x="218.5" y="33.5" width="49.5" height="48.5"/>
+        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+        <state key="normal" image="viewfinder.circle" catalog="system">
+            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+            </preferredSymbolConfiguration>
+        </state>
+    </button>
+    <button opaque="NO" multipleTouchEnabled="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VLy-Kw-c75" userLabel="5 - Torch">
+        <rect key="frame" x="291.5" y="33.5" width="49.5" height="48.5"/>
+        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+        <state key="normal" image="bolt.circle" catalog="system">
+            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+            </preferredSymbolConfiguration>
+        </state>
+    </button>
+    <button opaque="NO" multipleTouchEnabled="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJy-J4-1w3" userLabel="6 - Zoom">
+        <rect key="frame" x="364.5" y="33.5" width="49.5" height="48.5"/>
+        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+        <state key="normal" image="magnifyingglass.circle" catalog="system">
+            <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
+                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+            </preferredSymbolConfiguration>
+        </state>
+    </button>
+</subviews>

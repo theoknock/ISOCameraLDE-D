@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "CameraPropertiesDispatcher.h"
 
 @interface AppDelegate ()
 
@@ -17,8 +16,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
-    [CameraPropertiesDispatcher dispatch];
+    // Override point for customization after application launch.xr
     
     return YES;
 }

@@ -8,6 +8,17 @@
 
 @import UIKit;
 
-@interface ScaleSliderControlView : UIView
+#import "CameraPropertyDispatchSource.h"
+
+@protocol ScaleSliderControlViewDelegate <NSObject>
+
+- (void)handleTouchForButtonWithCameraProperty:(CameraProperty)cameraProperty;
+
+@end
+
+@interface ScaleSliderControlView : UIView <UIGestureRecognizerDelegate>
+
+@property (weak, nonatomic, setter=setDelegate:, getter=delegate) IBOutlet id<ScaleSliderControlViewDelegate> delegate;
+
 
 @end

@@ -10,6 +10,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+//typedef NS_OPTIONS(NSUInteger, CameraProperty) {
+//    CameraPropertyInvalid = 1 << 0,
+//    CameraPropertyPosition = 1 << 1,
+//    CameraPropertyRecord = 1 << 2,
+//    CameraPropertyExposureDuration = 1 << 3,
+//    CameraPropertyISO = 1 << 4,
+//    CameraPropertyLensPosition = 1 << 5,
+//    CameraPropertyTorchLevel = 1 << 6,
+//    CameraPropertyVideoZoomFactor = 1 << 7,
+//};
+
 typedef enum : NSUInteger {
     CameraPropertyInvalid,
     CameraPropertyPosition,
@@ -20,6 +31,8 @@ typedef enum : NSUInteger {
     CameraPropertyTorchLevel,
     CameraPropertyVideoZoomFactor,
 } CameraProperty;
+
+static void * (^keyForCameraProperty)(CameraProperty property);
 
 typedef struct {
     int *property;
@@ -39,7 +52,7 @@ typedef void (^CameraPropertyNormalizedValue)(CameraProperty *property, float *n
 @property (nonatomic, strong) __block dispatch_queue_t dispatch_source_queue;
 @property (nonatomic, strong) __block dispatch_source_t dispatch_source;
 
-- (void)setValue:(float)value forProperty:(CameraProperty)property;
+
 
 @end
 
