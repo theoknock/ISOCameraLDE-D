@@ -7,7 +7,7 @@
 //
 
 #import "ScaleSliderOverlayView.h"
-#import "ScaleSliderOverlayLayer.h"
+#import "ScaleSliderScrollViewLayer.h"
 
 @implementation ScaleSliderOverlayView
 
@@ -46,7 +46,7 @@
 
 + (Class)layerClass
 {
-    return [ScaleSliderOverlayLayer class];
+    return [ScaleSliderScrollViewLayer class];
 }
 
 - (void)drawRect:(CGRect)rect {

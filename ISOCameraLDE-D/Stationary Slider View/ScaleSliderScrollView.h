@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import <CoreText/CoreText.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ScaleSliderScrollView : UIScrollView
+{
+    CATextLayer *scaleSliderValueTextLayer;
+}
 
 @end
 

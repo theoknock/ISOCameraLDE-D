@@ -12,25 +12,28 @@
 #import "ScaleSliderControlView.h"
 #import "ScaleSliderScrollView.h"
 #import "ScaleSliderView.h"
-#import "ScaleSliderOverlayView.h"
-
+#import "ButtonCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef struct{
-    void *cameraPropertyValue;
-} CameraPropertyValue;
+typedef enum : NSUInteger {
+    CameraPropertyInvalid,
+    CameraPropertyPosition,
+    CameraPropertyRecord,
+    CameraPropertyExposureDuration,
+    CameraPropertyISO,
+    CameraPropertyLensPosition,
+    CameraPropertyTorchLevel,
+    CameraPropertyVideoZoomFactor,
+} CameraProperty;
 
-@interface CameraViewController : UIViewController <UIGestureRecognizerDelegate, UIScrollViewDelegate, ScaleSliderControlViewDelegate>
+@interface CameraViewController : UIViewController <ButtonCollectionViewDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cameraPropertyButtons;
 @property (weak, nonatomic) IBOutlet CameraControls *cameraControls;
 @property (weak, nonatomic) IBOutlet ScaleSliderControlView *scaleSliderControlView;
 @property (weak, nonatomic) IBOutlet ScaleSliderScrollView *scaleSliderScrollView;
 @property (weak, nonatomic) IBOutlet ScaleSliderView *scaleSliderView;
-@property (weak, nonatomic) IBOutlet ScaleSliderOverlayView *scaleSliderOverlayView;
-
-- (void)handleTouchForButtonWithCameraProperty:(CameraProperty)cameraProperty;
 
 @property (strong, nonatomic) __block AVCaptureDevice *videoDevice;
 
@@ -69,7 +72,12 @@ typedef struct{
 @property (strong, nonatomic) __block dispatch_source_t textureQueueEvent;
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *scaleSliderControlViews;
-@property (strong, nonatomic) CATextLayer *scaleSliderControlTextLayer;
+
+
+@property (weak, nonatomic) IBOutlet ButtonCollectionView *buttonCollectionView;
+- (UIButton *)buttonWithTag:(NSUInteger)tag;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

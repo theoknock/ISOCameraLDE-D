@@ -1,8 +1,8 @@
 //
-//  ConfigurationButtonsStackView.h
+//  ButtonCollectionViewCell.h
 //  ISOCameraLDE-D
 //
-//  Created by Xcode Developer on 10/15/19.
+//  Created by Xcode Developer on 10/20/19.
 //  Copyright © 2019 The Life of a Demoniac. All rights reserved.
 //
 
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ConfigurationButtonsStackView : UIStackView
+@interface ButtonCollectionViewCell : UICollectionViewCell
 
 @end
 

@@ -10,19 +10,6 @@
 
 @implementation ScaleSliderControlView
 
-@synthesize delegate = _delegate;
-
-- (void)setDelegate:(id<ScaleSliderControlViewDelegate>)delegate
-{
-    NSLog(@"ScaleSliderControlView delegate set");
-    self->_delegate = delegate;
-}
-
-- (id<ScaleSliderControlViewDelegate>)delegate
-{
-    return self->_delegate;
-}
-
 //- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 //{
 //    //    NSUInteger index = [[touch gestureRecognizers] indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

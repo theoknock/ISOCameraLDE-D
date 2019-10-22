@@ -14,6 +14,8 @@
 #import "CameraView.h"
 #import "ScaleSliderLayer.h"
 
+static NSString * const reuseIdentifier = @"CameraPropertyButtonCell";
+
 #define DISPATCH_CONFIGURATION_QUEUE_TIMEOUT (1.0 * NSEC_PER_SEC)
 
 typedef NS_ENUM( NSInteger, AVCamManualSetupResult ) {
@@ -28,9 +30,6 @@ typedef NS_ENUM( NSInteger, AVCamManualSetupResult ) {
 // 3. Set to highest camera resolution available
 
 @interface CameraViewController () <AVCaptureFileOutputRecordingDelegate>
-{
-    ScaleSliderLayer *scaleSliderLayer;
-}
 
 @property (weak, nonatomic) IBOutlet CameraView *cameraView;
 //@property (strong, nonatomic) CameraPropertyDispatchSource *dispatcher;
@@ -98,56 +97,23 @@ typedef NS_ENUM( NSInteger, AVCamManualSetupResult ) {
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-
-    [self.cameraControls.layer addSublayer:[self scaleSliderControlTextLayer]];
-    [self.scaleSliderControlTextLayer setBackgroundColor:[UIColor redColor].CGColor];
+    
+    [self.buttonCollectionView setButtonCollectionViewDelegate:(id<ButtonCollectionViewDelegate> _Nullable)self];
     
     //    [(ScaleSliderControlView*)self.scaleSliderControlView  setDelegate:(id<ScaleSliderControlViewDelegate>)self];
-    [(ScaleSliderOverlayView *)self.scaleSliderOverlayView setDelegate:(id<ScaleSliderOverlayViewDelegate> _Nullable)self];
+//    [(ScaleSliderOverlayView *)self.scaleSliderOverlayView setDelegate:(id<ScaleSliderOverlayViewDelegate> _Nullable)self];
     
     //    [self.scaleSliderControlView addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:nil];
     
-    CGFloat frameMinX  =    -(CGRectGetMidX(self.scaleSliderScrollView.frame));
-    CGFloat frameMaxX  =      CGRectGetMaxX(self.scaleSliderScrollView.frame) + fabs(CGRectGetMidX(self.scaleSliderScrollView.frame));
-    CGFloat insetMin   = fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
-    CGFloat insetMax   =     (CGRectGetMaxX(self.scaleSliderScrollView.frame) - CGRectGetMidX(self.scaleSliderScrollView.frame)) * 0.5;
-    [self.scaleSliderScrollView setContentInset:UIEdgeInsetsMake(CGRectGetMinY(self.scaleSliderScrollView.frame), insetMin, CGRectGetMaxY(self.scaleSliderScrollView.frame), insetMin)];
-    //    [self.scaleSliderScrollView setFrame:self.cameraControls.frame];
+//    CGFloat frameMinX  =    -(CGRectGetMidX(self.scaleSliderScrollView.frame));
+//    CGFloat frameMaxX  =      CGRectGetMaxX(self.scaleSliderScrollView.frame) + fabs(CGRectGetMidX(self.scaleSliderScrollView.frame));
+//    CGFloat insetMin   = fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
+//    CGFloat insetMax   =     (CGRectGetMaxX(self.scaleSliderScrollView.frame) - CGRectGetMidX(self.scaleSliderScrollView.frame)) * 0.5;
+//    [self.scaleSliderScrollView setContentInset:UIEdgeInsetsMake(CGRectGetMinY(self.scaleSliderScrollView.frame), insetMin, CGRectGetMaxY(self.scaleSliderScrollView.frame), insetMin)];
+//    //    [self.scaleSliderScrollView setFrame:self.cameraControls.frame];
 }
 
-- (CATextLayer *)scaleSliderControlTextLayer
-{
-    CATextLayer *tl = self->_scaleSliderControlTextLayer;
-    if (!tl)
-    {
-        tl = [CATextLayer layer];
-        
-        NSMutableParagraphStyle *centerAlignedParagraphStyle = [[NSMutableParagraphStyle alloc] init];
-        centerAlignedParagraphStyle.alignment                = NSTextAlignmentCenter;
-        NSDictionary *centerAlignedTextAttributes            = @{NSForegroundColorAttributeName:[UIColor systemYellowColor],
-                                                                 NSFontAttributeName:[UIFont systemFontOfSize:14.0],
-                                                                 NSParagraphStyleAttributeName:centerAlignedParagraphStyle};
-        int value = 0;
-        NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d", value]
-                                                                               attributes:centerAlignedTextAttributes];
-        [tl setOpaque:FALSE];
-    [tl setAlignmentMode:kCAAlignmentCenter];
-        [tl setWrapped:TRUE];
-        tl.string = attributedString;
-        
-//        CGSize textLayerframeSize = [self suggestFrameSizeWithConstraints:self.cameraControls.layer.bounds.size forAttributedString:attributedString]; // this creates the right size frame now (so work it back in)
-//        CGRect buttonFrame = [[self cameraControlButtonRectForCameraProperty:cameraProperty] CGRectValue];
-//        CGRect buttonFrameInSuperView = [self.cameraControls convertRect:buttonFrame toView:self.cameraControls];
-//
-//        CGRect frame = CGRectMake(CGRectGetMidX(buttonFrameInSuperView) - (textLayerframeSize.width / 2.0), textLayerframeSize.height * 1.25, textLayerframeSize.width, textLayerframeSize.height);
-        //        CGRect frame = CGRectMake(CGRectGetMidX([[self viewWithTag:[self selectedCameraProperty]] convertRect:[[self selectedCameraPropertyFrame] CGRectValue] toView:self]), /*(CGRectGetMidX([[self selectedCameraPropertyFrame] CGRectValue]).origin.x - ([[self selectedCameraPropertyFrame] CGRectValue].size.width / 2.0)) + 83.0*/, ((((CGRectGetMinY(self.bounds) + CGRectGetMidY(self.bounds)) / 2.0) + 6.0) + textLayerFrameY), 48.0, textLayerframeSize.height);
-        CGRect textLayerFrame = CGRectMake(CGRectGetMidX(self.view.frame) - 20.0, CGRectGetMinY(self.view.frame), 40.0, 40);
-        [tl setFrame:textLayerFrame];
-        self->_scaleSliderControlTextLayer = tl;
-    }
-    return tl;
-    
-}
+
 
 static CameraProperty (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSArray *) = ^ CameraProperty (NSArray * cameraPropertyButtons)
 {
@@ -173,11 +139,11 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
     return selectedButton;
 };
 
-static UIButton * (^requestButtonInIBOutletCollectionWithCameraProperty)(NSArray *, CameraProperty) = ^ UIButton *(NSArray * cameraPropertyButtons, CameraProperty property)
+- (UIButton *)buttonWithTag:(NSUInteger)tag
 {
     __block UIButton * requestedButton = nil;
-    [cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-        BOOL cameraPropertiesMatch = ((CameraProperty)[button tag] == property) ? TRUE : FALSE;
+    [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+        BOOL cameraPropertiesMatch = ((CameraProperty)[button tag] == tag) ? TRUE : FALSE;
         if (cameraPropertiesMatch) requestedButton = button;
         *stop = cameraPropertiesMatch;
     }];
@@ -995,50 +961,6 @@ static UIButton * (^requestButtonInIBOutletCollectionWithCameraProperty)(NSArray
 //    };
 //}
 
-- (void)selectCameraControlButtonForCameraProperty:(CameraProperty)cameraProperty
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (cameraProperty)
-        {
-            UIButton *selectedButton = (UIButton *)[self.view viewWithTag:cameraProperty];
-            // if the enumerated button and the sender button are the same AND the sender button is not already selected...
-            [selectedButton setSelected:TRUE];
-            [selectedButton setHighlighted:TRUE];
-            //            UIImage *symbol = [[(UIButton *)selectedButton currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleCaption1]];
-            //            [(UIButton *)selectedButton setImage:symbol forState:UIControlStateNormal];
-            [self.scaleSliderControlView setHidden:FALSE];
-            [self.scaleSliderOverlayView setSelectedCameraPropertyValue:[self cameraControlButtonRectForCameraProperty:cameraProperty]];
-            [self.scaleSliderOverlayView setNeedsDisplay];
-            
-            float value = cameraPropertyFunc(self.videoDevice, (CameraProperty)[(UIButton *)selectedButton tag]);
-            CGFloat frameMinX  = -(CGRectGetMidX(self.scaleSliderScrollView.frame));
-            CGFloat frameMaxX  =  CGRectGetMaxX(self.scaleSliderScrollView.frame) + fabs(CGRectGetMidX(self.scaleSliderScrollView.frame));
-            value = normalize(value, 0.0, 10.0, frameMinX, frameMaxX);
-            CGFloat inset = fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
-            [self.scaleSliderScrollView setContentInset:UIEdgeInsetsMake(CGRectGetMinY(self.scaleSliderScrollView.frame), inset, CGRectGetMaxY(self.scaleSliderScrollView.frame), inset)];
-            //            [self.scaleSliderScrollView setContentOffset:CGPointMake(-CGRectGetMidX(self.scaleSliderScrollView.frame) + ((frameMaxX + frameMinX) * value), 0.0) animated:TRUE];
-//            [self setValue:value forCameraControlProperty:cameraProperty];
-        }
-    });
-}
-
-- (void)deselectCameraControlButtonForCameraProperty:(CameraProperty)cameraProperty
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (cameraProperty)
-        {
-            UIButton *selectedButton = (UIButton *)[self.cameraControls viewWithTag:(!cameraProperty) ? cameraProperty : cameraPropertyForSelectedButtonInIBOutletCollection(self.cameraPropertyButtons)];
-            // if the enumerated button and the sender button are the same AND the sender button is not already selected...
-            [selectedButton setSelected:FALSE];
-            [selectedButton setHighlighted:FALSE];
-            //            UIImage *symbol = [[(UIButton *)selectedButton currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleLargeTitle]];
-            //            [(UIButton *)selectedButton setImage:symbol forState:UIControlStateNormal];
-        }
-        [self.scaleSliderControlView setHidden:TRUE];
-        [self.scaleSliderOverlayView setNeedsDisplay];
-    });
-}
-
 - (IBAction)recordButtonEventHandler:(UIButton *)sender forEvent:(UIEvent *)event {
     NSLog(@"Record button touched");
     [self toggleRecordingWithCompletionHandler:^(BOOL isRunning, NSError * _Nonnull error) {
@@ -1228,7 +1150,7 @@ return dispatch_source;
         //    printf("v: %d\n", v);
         //    void * value = &v;
             dispatch_source_merge_data([self textureQueueEvent], v);
-        [self.scaleSliderControlTextLayer setString:[NSString stringWithFormat:@"%ld", v]];
+//        [self.scaleSliderControlTextLayer setString:[NSString stringWithFormat:@"%ld", v]];
     });
     
 //    dispatch_queue_set_specific([self textureQueue], p, (void *)value, NULL/*(dispatch_function_t)free*/);
@@ -1317,18 +1239,6 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
     
     return cameraPropertyValue;
 }
-
-- (CGSize)suggestFrameSizeWithConstraints:(CGSize)size forAttributedString:(NSAttributedString *)attributedString
-{
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFMutableAttributedStringRef)attributedString);
-    CFRange attributedStringRange = CFRangeMake(0, attributedString.length);
-    CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, attributedStringRange, NULL, size, NULL);
-    CFRelease(framesetter);
-    
-    return suggestedSize;
-}
-
-
 
 - (void)toggleRecordingWithCompletionHandler:(void (^)(BOOL isRunning, NSError *error))completionHandler
 {
@@ -1463,8 +1373,8 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
             [(UIView *)obj setHidden:!shouldSelectSender];
             [(UIView *)obj setNeedsDisplay];
         }];
-        [self.scaleSliderControlTextLayer setHidden:!shouldSelectSender];
-        [self.scaleSliderControlTextLayer setNeedsLayout];
+//        [self.scaleSliderControlTextLayer setHidden:!shouldSelectSender];
+//        [self.scaleSliderControlTextLayer setNeedsLayout];
     });
     // if the sender is selected, deselect it and stop
     // if the sender is not selected, select it if there is no other button selected
