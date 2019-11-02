@@ -999,6 +999,7 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
         dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
         dispatch_async(dispatch_get_main_queue(), ^{
             float value = [(ScaleSliderScrollView *)scrollView value].floatValue;
+            NSLog(@"value %f", value);
             CameraProperty property = (CameraProperty)self.lockedCameraPropertyButton.tag;
             @try {
                 if (property == CameraPropertyLensPosition && [self.videoDevice isFocusModeSupported:AVCaptureFocusModeLocked])
@@ -1009,7 +1010,8 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
                             changedValueForKey(weakSelf, @"videoDevice.lensPosition");
                         }];
                 } else if (property == CameraPropertyISO) {
-                    if (![self.videoDevice isAdjustingExposure]) {
+                    if (value != (double)CMTimeGetSeconds(self.videoDevice.exposureDuration)) {
+//                    if (![self.videoDevice isAdjustingExposure]) {
                         [self willChangeValueForKey:@"self.ISO"];
                         float maxISO = self.videoDevice.activeFormat.maxISO;
                         float minISO = self.videoDevice.activeFormat.minISO;
@@ -1035,13 +1037,13 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
                 } else if (property == CameraPropertyExposureDuration) {
                     if (![self.videoDevice isAdjustingExposure]) {
                         [self willChangeValueForKey:@"videoDevice.exposureDuration"];
-                        double minDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.minExposureDuration);
-                        double maxDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.maxExposureDuration);
-                        // Map from duration to non-linear UI range 0-1
-                        float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
-                        //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
+//                        double minDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.minExposureDuration);
+//                        double maxDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.maxExposureDuration);
+//                        // Map from duration to non-linear UI range 0-1
+//                        float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
+//                        //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
                         double currentExposureDurationTimeScale = self.videoDevice.exposureDuration.timescale;
-                        CMTime newExposureDuration = CMTimeMakeWithSeconds(exposureDuration, currentExposureDurationTimeScale);
+                        CMTime newExposureDuration = CMTimeMakeWithSeconds(value, currentExposureDurationTimeScale);
                         [self.videoDevice setExposureModeCustomWithDuration:newExposureDuration ISO:AVCaptureISOCurrent completionHandler:^(CMTime syncTime) {
                             changedValueForKey(weakSelf, @"videoDevice.exposureDuration");
                         }];
@@ -1078,7 +1080,7 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
     switch (cameraProperty) {
         case CameraPropertyExposureDuration:
         {
-            cameraPropertyValue = (double)videoDevice.exposureDuration.timescale / (double)videoDevice.exposureDuration.value;
+            cameraPropertyValue = (double)CMTimeGetSeconds(videoDevice.exposureDuration); //videoDevice.exposureDuration.timescale / (double)videoDevice.exposureDuration.value;
             break;
         }
         case CameraPropertyISO:
@@ -1281,48 +1283,48 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
         }];
         if (!self.scaleSliderScrollView.isHidden)
         {
-            NSRange minMaxValues = [self cameraPropertyValueRange:senderButtonCameraProperty videoDevice:self.videoDevice];
-            [self.scaleSliderScrollView setMinimumValue:[NSNumber numberWithDouble:minMaxValues.location]];
-            [self.scaleSliderScrollView setMaximumValue:[NSNumber numberWithDouble:minMaxValues.length]];
+            NSArray<NSNumber *> * minMaxValues = [self cameraPropertyValueRange:senderButtonCameraProperty videoDevice:self.videoDevice];
+            [self.scaleSliderScrollView setMinimumValue:minMaxValues.firstObject];
+            [self.scaleSliderScrollView setMaximumValue:[NSNumber numberWithDouble:minMaxValues.firstObject.doubleValue + minMaxValues.lastObject.doubleValue]];
             [self.scaleSliderScrollView setValue:[NSNumber numberWithDouble:cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty)]];
         }
     });
 }
 
-- (NSRange)cameraPropertyValueRange:(CameraProperty)cameraProperty videoDevice:(AVCaptureDevice *)videoDevice
+- (NSArray<NSNumber *> *)cameraPropertyValueRange:(CameraProperty)cameraProperty videoDevice:(AVCaptureDevice *)videoDevice
 {
-    NSRange propertyValueRange;
+    NSArray<NSNumber *> * propertyValueRange;
     switch (cameraProperty) {
         case CameraPropertyExposureDuration:
         {
-            propertyValueRange = NSMakeRange(CMTimeGetSeconds(videoDevice.activeFormat.minExposureDuration), CMTimeGetSeconds(videoDevice.activeFormat.maxExposureDuration));
+            NSLog(@"%f %f", CMTimeGetSeconds(videoDevice.activeFormat.minExposureDuration), CMTimeGetSeconds(videoDevice.activeFormat.maxExposureDuration));
+            propertyValueRange = @[@(CMTimeGetSeconds(videoDevice.activeFormat.minExposureDuration)), @(CMTimeGetSeconds(videoDevice.activeFormat.maxExposureDuration))];
             break;
         }
         case CameraPropertyISO:
         {
-            propertyValueRange = NSMakeRange(videoDevice.activeFormat.minISO, videoDevice.activeFormat.maxISO);
+            propertyValueRange = @[@(videoDevice.activeFormat.minISO), @(videoDevice.activeFormat.maxISO)]; //NSMakeRange(videoDevice.activeFormat.minISO, videoDevice.activeFormat.maxISO);
             break;
         }
         case CameraPropertyLensPosition:
         {
-            propertyValueRange = NSMakeRange(0.0, 1.0);
+            propertyValueRange = @[@(0.0), @(1.0)];
             break;
         }
         case CameraPropertyTorchLevel:
         {
-            propertyValueRange = NSMakeRange(0.0, 1.0);
+            propertyValueRange = @[@(0.0), @(1.0)];
             break;
         }
         case CameraPropertyVideoZoomFactor:
         {
-            propertyValueRange = NSMakeRange(self.videoDevice.minAvailableVideoZoomFactor, self.videoDevice.maxAvailableVideoZoomFactor);
+            propertyValueRange = @[@(self.videoDevice.minAvailableVideoZoomFactor), @(self.videoDevice.maxAvailableVideoZoomFactor)];
             break;
         }
             
         default:
         {
-            propertyValueRange = NSMakeRange(0.0, 1.0);
-            break;
+            propertyValueRange = @[@(0.0), @(1.0)];
         }
     }
     

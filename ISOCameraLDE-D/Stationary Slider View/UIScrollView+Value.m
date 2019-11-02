@@ -15,7 +15,7 @@
 
 - (void)setMinimumValue:(NSNumber *)minimumValue
 {
-//    NSLog(@"minimum value\t%f", minimumValue.floatValue);
+    NSLog(@"minimum value\t%f", minimumValue.floatValue);
 //    self.minimumValue = [NSNumber numberWithDouble:MIN(minimumValue.floatValue, self.maximumValue.floatValue)];
     return objc_setAssociatedObject(self, @selector(minimumValue), minimumValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
@@ -28,6 +28,7 @@
 
 - (void)setMaximumValue:(NSNumber *)maximumValue
 {
+    NSLog(@"maximumValue %f", maximumValue.floatValue);
 //     NSLog(@"maximum value\t%f", maximumValue.floatValue);
 //    self.maximumValue = [NSNumber numberWithDouble:MAX(maximumValue.floatValue, self.minimumValue.floatValue)];
     return objc_setAssociatedObject(self, @selector(maximumValue), maximumValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -52,6 +53,7 @@
 
 - (void)setValue:(NSNumber *)value
 {
+    NSLog(@"value %f", value.floatValue);
     return objc_setAssociatedObject(self, @selector(value), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
