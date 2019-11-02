@@ -10,11 +10,16 @@
 #import <QuartzCore/QuartzCore.h>
 #import <CoreText/CoreText.h>
 
+#import "UIScrollView+Value.h"
+//#import "UIControl+GaugeViewProtocol.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ScaleSliderScrollView : UIScrollView
+@interface ScaleSliderScrollView : UIScrollView /*<GaugeViewDelegate>*/
 {
     CATextLayer *scaleSliderValueTextLayer;
+    CATextLayer *scaleSliderMinimumValueTextLayer;
+    CATextLayer *scaleSliderMaximumValueTextLayer;
 }
 
 @end

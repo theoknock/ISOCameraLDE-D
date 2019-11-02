@@ -7,32 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B9679A7A235654BC00BA9B01 /* ConfigurationButtonsStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9679A79235654BC00BA9B01 /* ConfigurationButtonsStackView.m */; };
+		B991FEDC235CCA1A00021686 /* ButtonCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B991FEDB235CCA1A00021686 /* ButtonCollectionView.m */; };
+		B991FEDF235CCDA600021686 /* ButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B991FEDE235CCDA600021686 /* ButtonCollectionViewCell.m */; };
 		B99AA86523548A8400274D3D /* ScaleSliderScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */; };
 		B99AA8682354E12500274D3D /* CameraControls.m in Sources */ = {isa = PBXBuildFile; fileRef = B99AA8672354E12500274D3D /* CameraControls.m */; };
+		B9AE5A7A2360781500E2EB57 /* UIScrollView+Value.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AE5A792360781500E2EB57 /* UIScrollView+Value.m */; };
 		B9D12BA1235402F30017DD25 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BA0235402F30017DD25 /* AppDelegate.m */; };
 		B9D12BA4235402F30017DD25 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BA3235402F30017DD25 /* SceneDelegate.m */; };
 		B9D12BAA235402F30017DD25 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9D12BA8235402F30017DD25 /* Main.storyboard */; };
 		B9D12BAC235402F40017DD25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9D12BAB235402F40017DD25 /* Assets.xcassets */; };
 		B9D12BAF235402F40017DD25 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9D12BAD235402F40017DD25 /* LaunchScreen.storyboard */; };
 		B9D12BB2235402F40017DD25 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BB1235402F40017DD25 /* main.m */; };
-		B9D12BCC235403C60017DD25 /* ScaleSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BB8235403C40017DD25 /* ScaleSliderView.m */; };
 		B9D12BCE235403C60017DD25 /* CameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BBD235403C50017DD25 /* CameraView.m */; };
-		B9D12BCF235403C60017DD25 /* ScaleSliderLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BBE235403C50017DD25 /* ScaleSliderLayer.m */; };
-		B9D12BD1235403C60017DD25 /* ScaleSliderOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BC2235403C50017DD25 /* ScaleSliderOverlayView.m */; };
 		B9D12BD2235403C60017DD25 /* ScaleSliderControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BC5235403C50017DD25 /* ScaleSliderControlView.m */; };
-		B9D12BD3235403C60017DD25 /* ScaleSliderOverlayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BC7235403C50017DD25 /* ScaleSliderOverlayLayer.m */; };
 		B9D12BD5235403C60017DD25 /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D12BC9235403C60017DD25 /* CameraViewController.m */; };
 		B9DE3DA623590F6E0014DB4A /* IB.xml snippet in Resources */ = {isa = PBXBuildFile; fileRef = B9DE3DA523590F6E0014DB4A /* IB.xml snippet */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B9679A78235654BC00BA9B01 /* ConfigurationButtonsStackView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfigurationButtonsStackView.h; sourceTree = "<group>"; };
-		B9679A79235654BC00BA9B01 /* ConfigurationButtonsStackView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfigurationButtonsStackView.m; sourceTree = "<group>"; };
+		B991FEDA235CCA1A00021686 /* ButtonCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ButtonCollectionView.h; sourceTree = "<group>"; };
+		B991FEDB235CCA1A00021686 /* ButtonCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ButtonCollectionView.m; sourceTree = "<group>"; };
+		B991FEDD235CCDA600021686 /* ButtonCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ButtonCollectionViewCell.h; sourceTree = "<group>"; };
+		B991FEDE235CCDA600021686 /* ButtonCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ButtonCollectionViewCell.m; sourceTree = "<group>"; };
 		B99AA86323548A8400274D3D /* ScaleSliderScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScaleSliderScrollView.h; sourceTree = "<group>"; };
 		B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderScrollView.m; sourceTree = "<group>"; };
 		B99AA8662354E12500274D3D /* CameraControls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraControls.h; sourceTree = "<group>"; };
 		B99AA8672354E12500274D3D /* CameraControls.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CameraControls.m; sourceTree = "<group>"; };
+		B9AE5A782360781500E2EB57 /* UIScrollView+Value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+Value.h"; sourceTree = "<group>"; };
+		B9AE5A792360781500E2EB57 /* UIScrollView+Value.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+Value.m"; sourceTree = "<group>"; };
 		B9D12B9C235402F30017DD25 /* ISOCameraLDE-D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ISOCameraLDE-D.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9D12B9F235402F30017DD25 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9D12BA0235402F30017DD25 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -43,19 +45,11 @@
 		B9D12BAE235402F40017DD25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B9D12BB0235402F40017DD25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9D12BB1235402F40017DD25 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B9D12BB8235403C40017DD25 /* ScaleSliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderView.m; sourceTree = "<group>"; };
-		B9D12BB9235403C40017DD25 /* ScaleSliderOverlayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderOverlayLayer.h; sourceTree = "<group>"; };
-		B9D12BBC235403C50017DD25 /* ScaleSliderLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderLayer.h; sourceTree = "<group>"; };
 		B9D12BBD235403C50017DD25 /* CameraView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraView.m; sourceTree = "<group>"; };
-		B9D12BBE235403C50017DD25 /* ScaleSliderLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderLayer.m; sourceTree = "<group>"; };
-		B9D12BC0235403C50017DD25 /* ScaleSliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderView.h; sourceTree = "<group>"; };
 		B9D12BC1235403C50017DD25 /* ScaleSliderControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderControlView.h; sourceTree = "<group>"; };
-		B9D12BC2235403C50017DD25 /* ScaleSliderOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderOverlayView.m; sourceTree = "<group>"; };
 		B9D12BC3235403C50017DD25 /* CameraView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraView.h; sourceTree = "<group>"; };
 		B9D12BC5235403C50017DD25 /* ScaleSliderControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderControlView.m; sourceTree = "<group>"; };
-		B9D12BC7235403C50017DD25 /* ScaleSliderOverlayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderOverlayLayer.m; sourceTree = "<group>"; };
 		B9D12BC9235403C60017DD25 /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; wrapsLines = 0; };
-		B9D12BCA235403C60017DD25 /* ScaleSliderOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScaleSliderOverlayView.h; sourceTree = "<group>"; };
 		B9D12BCB235403C60017DD25 /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
 		B9DE3DA523590F6E0014DB4A /* IB.xml snippet */ = {isa = PBXFileReference; explicitFileType = net.daringfireball.markdown; path = "IB.xml snippet"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -71,6 +65,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B991FEEA235E75AA00021686 /* Stationary Slider View */ = {
+			isa = PBXGroup;
+			children = (
+				B99AA86323548A8400274D3D /* ScaleSliderScrollView.h */,
+				B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */,
+				B9AE5A782360781500E2EB57 /* UIScrollView+Value.h */,
+				B9AE5A792360781500E2EB57 /* UIScrollView+Value.m */,
+			);
+			path = "Stationary Slider View";
+			sourceTree = "<group>";
+		};
 		B9D12B93235402F30017DD25 = {
 			isa = PBXGroup;
 			children = (
@@ -97,27 +102,20 @@
 				B9D12BA3235402F30017DD25 /* SceneDelegate.m */,
 				B9D12BCB235403C60017DD25 /* CameraViewController.h */,
 				B9D12BC9235403C60017DD25 /* CameraViewController.m */,
+				B991FEDA235CCA1A00021686 /* ButtonCollectionView.h */,
+				B991FEDB235CCA1A00021686 /* ButtonCollectionView.m */,
+				B991FEDD235CCDA600021686 /* ButtonCollectionViewCell.h */,
+				B991FEDE235CCDA600021686 /* ButtonCollectionViewCell.m */,
 				B9D12BC3235403C50017DD25 /* CameraView.h */,
 				B9D12BBD235403C50017DD25 /* CameraView.m */,
-				B9679A78235654BC00BA9B01 /* ConfigurationButtonsStackView.h */,
-				B9679A79235654BC00BA9B01 /* ConfigurationButtonsStackView.m */,
 				B99AA8662354E12500274D3D /* CameraControls.h */,
 				B99AA8672354E12500274D3D /* CameraControls.m */,
 				B9D12BC1235403C50017DD25 /* ScaleSliderControlView.h */,
 				B9D12BC5235403C50017DD25 /* ScaleSliderControlView.m */,
-				B99AA86323548A8400274D3D /* ScaleSliderScrollView.h */,
-				B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */,
-				B9D12BC0235403C50017DD25 /* ScaleSliderView.h */,
-				B9D12BB8235403C40017DD25 /* ScaleSliderView.m */,
-				B9D12BBC235403C50017DD25 /* ScaleSliderLayer.h */,
-				B9D12BBE235403C50017DD25 /* ScaleSliderLayer.m */,
-				B9D12BCA235403C60017DD25 /* ScaleSliderOverlayView.h */,
-				B9D12BC2235403C50017DD25 /* ScaleSliderOverlayView.m */,
+				B991FEEA235E75AA00021686 /* Stationary Slider View */,
 				B9D12BB1235402F40017DD25 /* main.m */,
-				B9D12BB9235403C40017DD25 /* ScaleSliderOverlayLayer.h */,
-				B9D12BC7235403C50017DD25 /* ScaleSliderOverlayLayer.m */,
-				B9D12BA8235402F30017DD25 /* Main.storyboard */,
 				B9DE3DA523590F6E0014DB4A /* IB.xml snippet */,
+				B9D12BA8235402F30017DD25 /* Main.storyboard */,
 				B9D12BAB235402F40017DD25 /* Assets.xcassets */,
 				B9D12BAD235402F40017DD25 /* LaunchScreen.storyboard */,
 				B9D12BB0235402F40017DD25 /* Info.plist */,
@@ -196,16 +194,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9D12BCC235403C60017DD25 /* ScaleSliderView.m in Sources */,
-				B9D12BD3235403C60017DD25 /* ScaleSliderOverlayLayer.m in Sources */,
+				B991FEDC235CCA1A00021686 /* ButtonCollectionView.m in Sources */,
 				B9D12BCE235403C60017DD25 /* CameraView.m in Sources */,
-				B9D12BD1235403C60017DD25 /* ScaleSliderOverlayView.m in Sources */,
 				B9D12BD5235403C60017DD25 /* CameraViewController.m in Sources */,
-				B9679A7A235654BC00BA9B01 /* ConfigurationButtonsStackView.m in Sources */,
+				B9AE5A7A2360781500E2EB57 /* UIScrollView+Value.m in Sources */,
 				B99AA8682354E12500274D3D /* CameraControls.m in Sources */,
 				B9D12BD2235403C60017DD25 /* ScaleSliderControlView.m in Sources */,
 				B9D12BA1235402F30017DD25 /* AppDelegate.m in Sources */,
-				B9D12BCF235403C60017DD25 /* ScaleSliderLayer.m in Sources */,
+				B991FEDF235CCDA600021686 /* ButtonCollectionViewCell.m in Sources */,
 				B99AA86523548A8400274D3D /* ScaleSliderScrollView.m in Sources */,
 				B9D12BB2235402F40017DD25 /* main.m in Sources */,
 				B9D12BA4235402F30017DD25 /* SceneDelegate.m in Sources */,

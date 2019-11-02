@@ -8,6 +8,12 @@
 
 #import "ScaleSliderScrollView.h"
 
+@interface ScaleSliderScrollView (NormalizedValue)
+
+@property (nonatomic) CGFloat normalizedValue;
+
+@end
+
 @implementation ScaleSliderScrollView
 
 - (void)awakeFromNib
@@ -17,10 +23,27 @@
     [self setContentInset:UIEdgeInsetsMake(CGRectGetMinY(self.frame), [self inset], CGRectGetMaxY(self.frame), [self inset])];
     
     scaleSliderValueTextLayer = [CATextLayer new];
+    [self attributesForTextLayer:scaleSliderValueTextLayer];
     [self.superview.layer addSublayer:scaleSliderValueTextLayer];
+    
+    scaleSliderMinimumValueTextLayer = [CATextLayer new];
+    [self attributesForTextLayer:scaleSliderMinimumValueTextLayer];
+    [self.superview.layer addSublayer:scaleSliderMinimumValueTextLayer];
+    
+    scaleSliderMaximumValueTextLayer = [CATextLayer new];
+    [self attributesForTextLayer:scaleSliderMaximumValueTextLayer];
+    [self.superview.layer addSublayer:scaleSliderMaximumValueTextLayer];
     
     [self.layer setNeedsDisplay];
     [self.layer setNeedsDisplayOnBoundsChange:YES];
+}
+
+- (void)attributesForTextLayer:(CATextLayer *)textLayer
+{
+    [(CATextLayer *)textLayer setAllowsFontSubpixelQuantization:TRUE];
+    [(CATextLayer *)textLayer setOpaque:FALSE];
+    [(CATextLayer *)textLayer setAlignmentMode:kCAAlignmentCenter];
+    [(CATextLayer *)textLayer setWrapped:FALSE];
 }
 
 - (CGFloat)inset
@@ -28,37 +51,49 @@
     return fabs(CGRectGetMidX(self.frame) - CGRectGetMinX(self.frame));
 }
 
-static double (^normalize)(float, float, float) = ^(float boundsX, float inset, float contentWidth)
-{
-    double value = (1.0 - 0.0) * ((boundsX + inset) - 0.0) / (contentWidth - 0.0) + 0.0;
-    value = (value < 0.0) ? 0.0 : (value > 1.0) ? 1.0 : value;
-    
-    return value;
-};
-
-- (void)displayLayer:(CALayer *)layer
+//- (void)displayLayer:(CALayer *)layer
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
 {
     NSMutableParagraphStyle *centerAlignedParagraphStyle = [[NSMutableParagraphStyle alloc] init];
     centerAlignedParagraphStyle.alignment = NSTextAlignmentCenter;
-    
     NSDictionary *centerAlignedTextAttributes = @{NSForegroundColorAttributeName:[UIColor systemYellowColor],
                                                   NSFontAttributeName:[UIFont systemFontOfSize:14.0],
                                                   NSParagraphStyleAttributeName:centerAlignedParagraphStyle};
     
-    NSString *valueString = [NSString stringWithFormat:@"%.2f", normalize(self.bounds.origin.x, [self inset], self.contentSize.width)];
-    
+    NSString *valueString = [NSString stringWithFormat:@"%.2f", self.value.floatValue];
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:valueString attributes:centerAlignedTextAttributes];
-    
-    
-    [(CATextLayer *)scaleSliderValueTextLayer setOpaque:FALSE];
-    [(CATextLayer *)scaleSliderValueTextLayer setAlignmentMode:kCAAlignmentCenter];
-    [(CATextLayer *)scaleSliderValueTextLayer setWrapped:FALSE];
     ((CATextLayer *)scaleSliderValueTextLayer).string = attributedString;
 
     CGSize textLayerframeSize = [self suggestFrameSizeWithConstraints:self.frame.size forAttributedString:attributedString];
     CGRect textLayerFrame = CGRectMake(CGRectGetMidX(self.frame) - (textLayerframeSize.width * 0.5), CGRectGetMinY(self.frame), textLayerframeSize.width, textLayerframeSize.height);
-
     [(CATextLayer *)scaleSliderValueTextLayer setFrame:textLayerFrame];
+    
+    CGRect bounds = CGRectMake(CGRectGetMidX(self.frame) - (CGRectGetWidth(self.frame) * 0.5), 0.0, CGRectGetWidth(self.frame) * 2.0, CGRectGetHeight(self.frame));
+    CGContextTranslateCTM(ctx, CGRectGetMinX(bounds), CGRectGetMinY(bounds));
+
+    CGFloat stepSize = (CGRectGetMaxX(bounds) / 100.0);
+    CGFloat height_eighth = (CGRectGetHeight(bounds) / 8.0);
+    CGFloat height_sixteenth = (CGRectGetHeight(bounds) / 16.0);
+    CGFloat height_thirtyseconth = (CGRectGetHeight(bounds) / 16.0);
+    for (int t = 0; t <= 100; t++) {
+        CGFloat x = (CGRectGetMinX(bounds) + (stepSize * t));
+        if (t % 10 == 0)
+        {
+            CGContextSetStrokeColorWithColor(ctx, [[UIColor whiteColor] CGColor]);
+            CGContextSetLineWidth(ctx, 0.625);
+            CGContextMoveToPoint(ctx, x, (CGRectGetMinY(bounds) + height_eighth) - height_thirtyseconth);
+            CGContextAddLineToPoint(ctx, x, (CGRectGetMidY(bounds) - height_eighth) - height_thirtyseconth);
+        }
+        else
+        {
+            CGContextSetStrokeColorWithColor(ctx, [[UIColor lightGrayColor] CGColor]);
+            CGContextSetLineWidth(ctx, 0.375);
+            CGContextMoveToPoint(ctx, x, (CGRectGetMinY(bounds) + (height_eighth + height_sixteenth)) - height_thirtyseconth);
+            CGContextAddLineToPoint(ctx, x, (CGRectGetMidY(bounds) - (height_eighth + height_sixteenth)) - height_thirtyseconth);
+        }
+        
+        CGContextStrokePath(ctx);
+    }
 }
 
 - (CGSize)suggestFrameSizeWithConstraints:(CGSize)size forAttributedString:(NSAttributedString *)attributedString
@@ -70,6 +105,5 @@ static double (^normalize)(float, float, float) = ^(float boundsX, float inset, 
     
     return suggestedSize;
 }
-
 
 @end

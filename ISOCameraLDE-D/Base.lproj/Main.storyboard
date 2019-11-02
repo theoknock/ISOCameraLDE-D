@@ -27,7 +27,7 @@
                             <view opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KS8-cd-Ctu" userLabel="0 - Camera Controls" customClass="CameraControls">
                                 <rect key="frame" x="0.0" y="780" width="414" height="82"/>
                                 <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OPj-rR-3c0" userLabel="15 - Button Collection View" customClass="ButtonCollectionView">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OPj-rR-3c0" userLabel="15 - Button Collection View" customClass="ButtonCollectionView">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Ajc-E1-Jy6">
@@ -37,10 +37,10 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CameraPropertyButtonCell" id="nj1-ST-NPG" customClass="ButtonCollectionViewCell">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" reuseIdentifier="CameraPropertyButtonCell" id="nj1-ST-NPG" customClass="ButtonCollectionViewCell">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="B5v-ku-EU9">
+                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" insetsLayoutMarginsFromSafeArea="NO" id="B5v-ku-EU9">
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </collectionViewCellContentView>
@@ -52,27 +52,26 @@
                                             <outlet property="delegate" destination="Y19-1Y-72S" id="QaW-82-GiQ"/>
                                         </connections>
                                     </collectionView>
-                                    <view hidden="YES" opaque="NO" multipleTouchEnabled="YES" tag="9" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtW-vy-3Vi" userLabel="9 - Scale Slider Control" customClass="ScaleSliderControlView">
+                                    <view hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="9" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtW-vy-3Vi" userLabel="9 - Scale Slider Control" customClass="ScaleSliderControlView">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
                                         <subviews>
-                                            <scrollView hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaH-y2-z6H" userLabel="10 - Scale Slider Scroll View" customClass="ScaleSliderScrollView">
+                                            <scrollView hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="10" contentMode="scaleToFill" directionalLockEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaH-y2-z6H" userLabel="10 - Scale Slider Scroll View" customClass="ScaleSliderScrollView">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="82"/>
-                                                <subviews>
-                                                    <view hidden="YES" opaque="NO" multipleTouchEnabled="YES" tag="11" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XVH-36-NFH" userLabel="11 - Scale Slider View" customClass="ScaleSliderView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="828" height="82"/>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    </view>
-                                                </subviews>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <gestureRecognizers/>
-                                                <constraints>
-                                                    <constraint firstItem="XVH-36-NFH" firstAttribute="trailing" secondItem="RxT-Gg-FKZ" secondAttribute="trailing" id="C6B-0c-ivC"/>
-                                                    <constraint firstItem="XVH-36-NFH" firstAttribute="bottom" secondItem="wcv-7S-c8N" secondAttribute="bottom" id="W1b-JE-v1F"/>
-                                                    <constraint firstItem="XVH-36-NFH" firstAttribute="top" secondItem="wcv-7S-c8N" secondAttribute="top" id="a2Z-Ib-Hjo"/>
-                                                    <constraint firstItem="XVH-36-NFH" firstAttribute="leading" secondItem="RxT-Gg-FKZ" secondAttribute="leading" id="hmn-6H-qII"/>
-                                                </constraints>
                                                 <viewLayoutGuide key="contentLayoutGuide" id="RxT-Gg-FKZ" userLabel="13 - Content Layout Guide"/>
                                                 <viewLayoutGuide key="frameLayoutGuide" id="wcv-7S-c8N" userLabel="14 - Frame Layout Guide"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="value">
+                                                        <real key="value" value="0.5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
+                                                        <integer key="value" value="0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
+                                                        <integer key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
                                                 <connections>
                                                     <outlet property="delegate" destination="Y19-1Y-72S" id="ZVa-4Y-CU0"/>
                                                     <outletCollection property="gestureRecognizers" destination="ClO-3V-nFK" appends="YES" id="gom-pJ-39H"/>
@@ -132,18 +131,22 @@
                         <outlet property="recordCameraPropertyButton" destination="7uE-u4-lru" id="PKb-Xn-LSI"/>
                         <outlet property="scaleSliderControlView" destination="jtW-vy-3Vi" id="w0m-JE-mNK"/>
                         <outlet property="scaleSliderScrollView" destination="BaH-y2-z6H" id="0cP-rN-hdz"/>
-                        <outlet property="scaleSliderView" destination="XVH-36-NFH" id="R4S-GB-mv0"/>
                         <outlet property="torchLevelCameraPropertyButton" destination="VLy-Kw-c75" id="ciS-qd-Voj"/>
                         <outlet property="zoomFactorCameraPropertyButton" destination="IJy-J4-1w3" id="vXm-Tl-zzO"/>
                         <outletCollection property="scaleSliderControlViews" destination="jtW-vy-3Vi" id="8Ky-e8-KM7"/>
                         <outletCollection property="scaleSliderControlViews" destination="BaH-y2-z6H" id="lKf-xU-DE4"/>
-                        <outletCollection property="scaleSliderControlViews" destination="XVH-36-NFH" id="T4g-uk-OGl"/>
-                        <outletCollection property="cameraPropertyButtons" destination="7uE-u4-lru" id="pMo-hK-xJk"/>
                         <outletCollection property="cameraPropertyButtons" destination="564-wg-wTK" id="Uiu-i6-0lD"/>
                         <outletCollection property="cameraPropertyButtons" destination="Axk-Cc-qFi" id="wpf-0V-7bt"/>
                         <outletCollection property="cameraPropertyButtons" destination="b1Y-dK-Ek8" id="omP-A0-mT8"/>
                         <outletCollection property="cameraPropertyButtons" destination="VLy-Kw-c75" id="1li-0j-YuV"/>
                         <outletCollection property="cameraPropertyButtons" destination="IJy-J4-1w3" id="Ehu-Lp-LiR"/>
+                        <outletCollection property="buttons" destination="7uE-u4-lru" id="teQ-gS-pzi"/>
+                        <outletCollection property="buttons" destination="564-wg-wTK" id="uRd-OL-u2D"/>
+                        <outletCollection property="buttons" destination="Axk-Cc-qFi" id="Mi3-0W-NZi"/>
+                        <outletCollection property="buttons" destination="b1Y-dK-Ek8" id="BsD-nx-EDj"/>
+                        <outletCollection property="buttons" destination="VLy-Kw-c75" id="fS5-Wb-bRa"/>
+                        <outletCollection property="buttons" destination="IJy-J4-1w3" id="cK0-rf-veN"/>
+                        <outletCollection property="cameraPropertyButtons" destination="7uE-u4-lru" id="a0O-Qz-FKJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TlQ-kz-zYe" sceneMemberID="firstResponder"/>
@@ -153,12 +156,10 @@
                         <outlet property="delegate" destination="jtW-vy-3Vi" id="Cxg-po-VgK"/>
                     </connections>
                 </tapGestureRecognizer>
-                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="7uE-u4-lru" userLabel="2 - Record">
+                <button opaque="NO" tag="2" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="7uE-u4-lru" userLabel="2 - Record">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                    <inset key="titleEdgeInsets" minX="-53" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <inset key="imageEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
                     <state key="normal" image="stop.circle" catalog="system">
                         <color key="titleColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -167,16 +168,14 @@
                         </preferredSymbolConfiguration>
                     </state>
                     <connections>
-                        <action selector="cameraPropertyButtonEventHandler:forEvent:" destination="Y19-1Y-72S" eventType="touchUpInside" id="cCT-Vc-DaH"/>
+                        <action selector="toggleRecording:" destination="Y19-1Y-72S" eventType="touchUpInside" id="7UD-ZD-Pmy"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="564-wg-wTK" userLabel="3 - Exposure Duration">
+                <button opaque="NO" tag="3" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="564-wg-wTK" userLabel="3 - Exposure Duration">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                    <inset key="titleEdgeInsets" minX="-53" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <inset key="imageEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="000" image="timer" catalog="system">
+                    <state key="normal" image="timer" catalog="system">
                         <color key="titleColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
@@ -184,16 +183,14 @@
                         </preferredSymbolConfiguration>
                     </state>
                     <connections>
-                        <action selector="cameraPropertyButtonEventHandler:forEvent:" destination="Y19-1Y-72S" eventType="touchUpInside" id="fqH-bV-cJw"/>
+                        <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="IND-wX-qWR"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="Axk-Cc-qFi" userLabel="4 - ISO">
+                <button opaque="NO" tag="4" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="Axk-Cc-qFi" userLabel="4 - ISO">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="51.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                    <inset key="titleEdgeInsets" minX="-53" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <inset key="imageEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="000" image="sun.max" catalog="system">
+                    <state key="normal" image="sun.max" catalog="system">
                         <color key="titleColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
@@ -201,16 +198,14 @@
                         </preferredSymbolConfiguration>
                     </state>
                     <connections>
-                        <action selector="cameraPropertyButtonEventHandler:forEvent:" destination="Y19-1Y-72S" eventType="touchUpInside" id="MDR-iW-ECH"/>
+                        <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="gtB-CX-D8R"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="b1Y-dK-Ek8" userLabel="5 - Focus">
+                <button opaque="NO" tag="5" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="b1Y-dK-Ek8" userLabel="5 - Focus">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                    <inset key="titleEdgeInsets" minX="-53" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <inset key="imageEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="000" image="viewfinder.circle" catalog="system">
+                    <state key="normal" image="viewfinder.circle" catalog="system">
                         <color key="titleColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
@@ -218,16 +213,14 @@
                         </preferredSymbolConfiguration>
                     </state>
                     <connections>
-                        <action selector="cameraPropertyButtonEventHandler:forEvent:" destination="Y19-1Y-72S" eventType="touchUpInside" id="Oda-zK-ep1"/>
+                        <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="BZQ-Jy-hEo"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="VLy-Kw-c75" userLabel="6 - Torch">
+                <button opaque="NO" tag="6" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="VLy-Kw-c75" userLabel="6 - Torch">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                    <inset key="titleEdgeInsets" minX="-53" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <inset key="imageEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="000" image="bolt.circle" catalog="system">
+                    <state key="normal" image="bolt.circle" catalog="system">
                         <color key="titleColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
@@ -235,16 +228,14 @@
                         </preferredSymbolConfiguration>
                     </state>
                     <connections>
-                        <action selector="cameraPropertyButtonEventHandler:forEvent:" destination="Y19-1Y-72S" eventType="touchUpInside" id="JTb-z3-hda"/>
+                        <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="AK6-u3-e5t"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="7" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="IJy-J4-1w3" userLabel="7 - Zoom">
+                <button opaque="NO" tag="7" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="IJy-J4-1w3" userLabel="7 - Zoom">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                    <inset key="titleEdgeInsets" minX="-53" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <inset key="imageEdgeInsets" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <state key="normal" title="000" image="magnifyingglass.circle" catalog="system">
+                    <state key="normal" image="magnifyingglass.circle" catalog="system">
                         <color key="titleColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="font" scale="large">
@@ -252,7 +243,7 @@
                         </preferredSymbolConfiguration>
                     </state>
                     <connections>
-                        <action selector="cameraPropertyButtonEventHandler:forEvent:" destination="Y19-1Y-72S" eventType="touchUpInside" id="5vq-XO-N82"/>
+                        <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="wnE-hn-3cn"/>
                     </connections>
                 </button>
             </objects>
