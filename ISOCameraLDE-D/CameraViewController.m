@@ -1015,7 +1015,7 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
                         float minISO = self.videoDevice.activeFormat.minISO;
                         float ISO = minISO + (value * (maxISO - minISO));
                         ISO = ((ISO > minISO) && (ISO < maxISO)) ? ISO : self.videoDevice.ISO;
-                        [self.videoDevice setExposureModeCustomWithDuration:AVCaptureExposureDurationCurrent ISO:ISO completionHandler:^(CMTime syncTime) {
+                        [self.videoDevice setExposureModeCustomWithDuration:AVCaptureExposureDurationCurrent ISO:value completionHandler:^(CMTime syncTime) {
                             changedValueForKey(weakSelf, @"self.ISO");
                         }];
                     }
@@ -1029,12 +1029,7 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
                 } else if (property == CameraPropertyVideoZoomFactor) {
                     if (![self.videoDevice isRampingVideoZoom]) {
                         [self willChangeValueForKey:@"videoZoomFactor"];
-                        float maxZoom = self.videoDevice.maxAvailableVideoZoomFactor;
-                        float minZoom = self.videoDevice.minAvailableVideoZoomFactor;
-                        float zoomValue = minZoom + (pow(value, 5.0) * (maxZoom - minZoom));
-                        zoomValue = (zoomValue < minZoom) ? minZoom : (zoomValue > maxZoom) ? maxZoom : zoomValue;
-                        //                        zoomValue = 1.0 + (zoomValue * (self.videoDevice.activeFormat.videoMaxZoomFactor - 1.0));
-                        [self.videoDevice setVideoZoomFactor:zoomValue];
+                        [self.videoDevice setVideoZoomFactor:value];
                         changedValueForKey(weakSelf, @"videoZoomFactor");
                     }
                 } else if (property == CameraPropertyExposureDuration) {
@@ -1269,7 +1264,6 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
 
 - (IBAction)cameraPropertyButtonEventHandler:(UIButton *)sender
 {
-    NSLog(@"Button tag: %lu", sender.tag);
     CameraProperty selectedButtonCameraProperty = ([sender isSelected]) ? (CameraProperty)[sender tag] : cameraPropertyForSelectedButtonInIBOutletCollection(self.buttons);
     CameraProperty senderButtonCameraProperty = (CameraProperty)[sender tag];
     BOOL senderButtonCameraPropertyEqualsSelectedButtonCameraProperty = (senderButtonCameraProperty == selectedButtonCameraProperty) ? TRUE : FALSE;
@@ -1321,7 +1315,7 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
         }
         case CameraPropertyVideoZoomFactor:
         {
-            propertyValueRange = NSMakeRange(0.0, 1.0);
+            propertyValueRange = NSMakeRange(self.videoDevice.minAvailableVideoZoomFactor, self.videoDevice.maxAvailableVideoZoomFactor);
             break;
         }
             

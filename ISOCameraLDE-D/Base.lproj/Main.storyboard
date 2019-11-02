@@ -150,7 +150,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TlQ-kz-zYe" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer delaysTouchesEnded="NO" id="ClO-3V-nFK">
+                <tapGestureRecognizer cancelsTouchesInView="NO" delaysTouchesEnded="NO" id="ClO-3V-nFK">
                     <connections>
                         <action selector="handleTapGesture:" destination="Y19-1Y-72S" id="hLp-09-req"/>
                         <outlet property="delegate" destination="jtW-vy-3Vi" id="Cxg-po-VgK"/>

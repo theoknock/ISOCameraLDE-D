@@ -11,7 +11,7 @@
 
 @implementation UIScrollView (Value)
 
-@dynamic minimumValue, maximumValue;
+@dynamic minimumValue, maximumValue, value;
 
 - (void)setMinimumValue:(NSNumber *)minimumValue
 {
@@ -52,7 +52,7 @@
 
 - (void)setValue:(NSNumber *)value
 {
-    [self setContentOffset:CGPointMake(value.floatValue, 0.0) animated:TRUE];
+    return objc_setAssociatedObject(self, @selector(value), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
