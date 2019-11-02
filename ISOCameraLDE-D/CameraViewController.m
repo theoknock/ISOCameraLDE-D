@@ -12,13 +12,13 @@
 
 #import "CameraViewController.h"
 #import "CameraView.h"
-#import "ScaleSliderLayer.h"
+
 
 static NSString * const reuseIdentifier = @"CameraPropertyButtonCell";
 
 #define DISPATCH_CONFIGURATION_QUEUE_TIMEOUT (1.0 * NSEC_PER_SEC)
 
-typedef NS_ENUM( NSInteger, AVCamManualSetupResult ) {
+typedef NS_ENUM(NSInteger, AVCamManualSetupResult) {
     AVCamManualSetupResultSuccess,
     AVCamManualSetupResultCameraNotAuthorized,
     AVCamManualSetupResultSessionConfigurationFailed
@@ -101,16 +101,16 @@ typedef NS_ENUM( NSInteger, AVCamManualSetupResult ) {
     [self.buttonCollectionView setButtonCollectionViewDelegate:(id<ButtonCollectionViewDelegate> _Nullable)self];
     
     //    [(ScaleSliderControlView*)self.scaleSliderControlView  setDelegate:(id<ScaleSliderControlViewDelegate>)self];
-//    [(ScaleSliderOverlayView *)self.scaleSliderOverlayView setDelegate:(id<ScaleSliderOverlayViewDelegate> _Nullable)self];
+    //    [(ScaleSliderOverlayView *)self.scaleSliderOverlayView setDelegate:(id<ScaleSliderOverlayViewDelegate> _Nullable)self];
     
     //    [self.scaleSliderControlView addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:nil];
     
-//    CGFloat frameMinX  =    -(CGRectGetMidX(self.scaleSliderScrollView.frame));
-//    CGFloat frameMaxX  =      CGRectGetMaxX(self.scaleSliderScrollView.frame) + fabs(CGRectGetMidX(self.scaleSliderScrollView.frame));
-//    CGFloat insetMin   = fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
-//    CGFloat insetMax   =     (CGRectGetMaxX(self.scaleSliderScrollView.frame) - CGRectGetMidX(self.scaleSliderScrollView.frame)) * 0.5;
-//    [self.scaleSliderScrollView setContentInset:UIEdgeInsetsMake(CGRectGetMinY(self.scaleSliderScrollView.frame), insetMin, CGRectGetMaxY(self.scaleSliderScrollView.frame), insetMin)];
-//    //    [self.scaleSliderScrollView setFrame:self.cameraControls.frame];
+    //    CGFloat frameMinX  =    -(CGRectGetMidX(self.scaleSliderScrollView.frame));
+    //    CGFloat frameMaxX  =      CGRectGetMaxX(self.scaleSliderScrollView.frame) + fabs(CGRectGetMidX(self.scaleSliderScrollView.frame));
+    //    CGFloat insetMin   = fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
+    //    CGFloat insetMax   =     (CGRectGetMaxX(self.scaleSliderScrollView.frame) - CGRectGetMidX(self.scaleSliderScrollView.frame)) * 0.5;
+    //    [self.scaleSliderScrollView setContentInset:UIEdgeInsetsMake(CGRectGetMinY(self.scaleSliderScrollView.frame), insetMin, CGRectGetMaxY(self.scaleSliderScrollView.frame), insetMin)];
+    //    //    [self.scaleSliderScrollView setFrame:self.cameraControls.frame];
 }
 
 
@@ -120,7 +120,7 @@ static CameraProperty (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSA
     __block CameraProperty cameraProperty = CameraPropertyInvalid;
     [cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         BOOL isSelected = [button isSelected];
-        cameraProperty = (isSelected) ? [button tag] : CameraPropertyInvalid;
+        cameraProperty = (isSelected && [button tag] != CameraPropertyRecord) ? [button tag] : CameraPropertyInvalid;
         *stop = isSelected;
     }];
     
@@ -136,13 +136,13 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
         *stop = isSelected;
     }];
     
-    return selectedButton;
+    return (selectedButton.tag != CameraPropertyRecord) ? selectedButton : nil;
 };
 
 - (UIButton *)buttonWithTag:(NSUInteger)tag
 {
     __block UIButton * requestedButton = nil;
-    [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.buttons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
         BOOL cameraPropertiesMatch = ((CameraProperty)[button tag] == tag) ? TRUE : FALSE;
         if (cameraPropertiesMatch) requestedButton = button;
         *stop = cameraPropertiesMatch;
@@ -151,9 +151,9 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
     return requestedButton;
 };
 
-//- (void)connectTouchUpInsideEventHandlerToCameraPropertyButtons:(NSArray <UIButton *> *)cameraPropertyButtons
+//- (void)connectTouchUpInsideEventHandlerToCameraPropertyButtons:(NSArray <UIButton *> *)buttons
 //{
-//    [cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+//    [buttons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
 //        [button targetForAction:@selector(cameraPropertyButtonEventHandler:forEvent:) withSender:button];
 //    }];
 //}
@@ -175,13 +175,13 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
     self.cameraView.session = self.session;
     
     // Communicate with the session and other session objects on this queue
-    self.sessionQueue = dispatch_queue_create( "session queue", DISPATCH_QUEUE_SERIAL );
+    self.sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
     
     self.setupResult = AVCamManualSetupResultSuccess;
     
     // Check video authorization status. Video access is required and audio access is optional.
     // If audio access is denied, audio is not recorded during movie recording.
-    switch ( [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] )
+    switch ([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo])
     {
         case AVAuthorizationStatusAuthorized:
         {
@@ -193,12 +193,12 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
             // The user has not yet been presented with the option to grant video access.
             // We suspend the session queue to delay session running until the access request has completed.
             // Note that audio access will be implicitly requested when we create an AVCaptureDeviceInput for audio during session setup.
-            dispatch_suspend( self.sessionQueue );
-            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^( BOOL granted ) {
-                if ( ! granted ) {
+            dispatch_suspend(self.sessionQueue);
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                if (! granted) {
                     self.setupResult = AVCamManualSetupResultCameraNotAuthorized;
                 }
-                dispatch_resume( self.sessionQueue );
+                dispatch_resume(self.sessionQueue);
             }];
             break;
         }
@@ -215,14 +215,14 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
     // Why not do all of this on the main queue?
     // Because -[AVCaptureSession startRunning] is a blocking call which can take a long time. We dispatch session setup to the sessionQueue
     // so that the main queue isn't blocked, which keeps the UI responsive.
-    dispatch_async( self.sessionQueue, ^{
+    dispatch_async(self.sessionQueue, ^{
         [self configureSession];
-    } );
+    });
 }
 
 - (void)configureSession
 {
-    if ( self.setupResult != AVCamManualSetupResultSuccess ) {
+    if (self.setupResult != AVCamManualSetupResultSuccess) {
         return;
     }
     
@@ -257,7 +257,7 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
         {
             [self.session addOutput:movieFileOutput];
             AVCaptureConnection *connection = [movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-            if ( connection.isVideoStabilizationSupported ) {
+            if (connection.isVideoStabilizationSupported) {
                 connection.preferredVideoStabilizationMode = AVCaptureVideoStabilizationModeAuto;
             }
             self.movieFileOutput = movieFileOutput;
@@ -266,7 +266,7 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
         dispatch_async(dispatch_get_main_queue(), ^{
             UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
             AVCaptureVideoOrientation initialVideoOrientation = AVCaptureVideoOrientationPortrait;
-            if ( statusBarOrientation != UIInterfaceOrientationUnknown ) {
+            if (statusBarOrientation != UIInterfaceOrientationUnknown) {
                 initialVideoOrientation = (AVCaptureVideoOrientation)statusBarOrientation;
             }
             
@@ -296,8 +296,8 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 {
     [super viewWillAppear:animated];
     
-    dispatch_async( self.sessionQueue, ^{
-        switch ( self.setupResult )
+    dispatch_async(self.sessionQueue, ^{
+        switch (self.setupResult)
         {
             case AVCamManualSetupResultSuccess:
             {
@@ -306,183 +306,78 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
                 //                self.sessionRunning = self.session.isRunning;
                 if (self.session.isRunning)
                 {
-                    [self lockDevice];
-                    [self configureCameraForHighestFrameRateWithCompletionHandler:^(NSString *error_description) {
-                        if (error_description)
+                    __autoreleasing NSError *error = nil;
+                    @try {
+                        if ([self.videoDevice lockForConfiguration:&error])
                         {
-                            //NSLog(@"Error configuring camera for highest frame rate: %@", error_description);
-                        }
-                        [self autoExposureWithCompletionHandler:^(double ISO) {
-                            [self autoFocusWithCompletionHandler:^(double focus) {
-                                
+                            NSLog(@"Configuring camera for highest frame rate...");
+                            [self configureCameraForHighestFrameRateWithCompletionHandler:^(NSString *error_description) {
+                                if (error_description)
+                                {
+                                    NSLog(@"Error configuring camera for highest frame rate: %@", error_description);
+                                } else {
+                                    NSLog(@"Configured camera for highest frame rate.");
+                                    NSLog(@"Enabling auto-exposure...");
+                                    [self autoExposureWithCompletionHandler:^(NSString *error_description) {
+                                        if (error_description)
+                                        {
+                                            NSLog(@"Error setting auto-exposure: %@", error_description);
+                                        } else {
+                                            NSLog(@"Auto-exposure enabled.");
+                                            NSLog(@"Enabling auto-focus...");
+                                            [self autoFocusWithCompletionHandler:^(NSString *error_description) {
+                                                if (error_description)
+                                                {
+                                                    NSLog(@"Error setting auto-exposure: %@", error_description);
+                                                } else {
+                                                    NSLog(@"Auto-focus enabled.");
+                                                }
+                                            }];
+                                        }
+                                    }];
+                                }
                             }];
-                        }];
-                    }];
-                } else {
-                    //NSLog(@"Session is running");
+                        }
+                    } @catch (NSException *exception) {
+                        NSLog(@"\n\n%@\n%@\n\n", error.description, exception.description);
+                    } @finally {
+                        [self lockDevice];
+                    }
                 }
                 break;
             }
             case AVCamManualSetupResultCameraNotAuthorized:
             {
-                dispatch_async( dispatch_get_main_queue(), ^{
-                    NSString *message = NSLocalizedString( @"AVCamManual doesn't have permission to use the camera, please change privacy settings", @"Alert message when the user has denied access to the camera" );
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString *message = NSLocalizedString(@"AVCamManual doesn't have permission to use the camera, please change privacy settings", @"Alert message when the user has denied access to the camera");
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"AVCamManual" message:message preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString( @"OK", @"Alert OK button" ) style:UIAlertActionStyleCancel handler:nil];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"Alert OK button") style:UIAlertActionStyleCancel handler:nil];
                     [alertController addAction:cancelAction];
                     // Provide quick access to Settings
-                    UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:NSLocalizedString( @"Settings", @"Alert button to open Settings" ) style:UIAlertActionStyleDefault handler:^( UIAlertAction *action ) {
+                    UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Settings", @"Alert button to open Settings") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{} completionHandler:nil];
                     }];
                     [alertController addAction:settingsAction];
                     [self presentViewController:alertController animated:YES completion:nil];
-                } );
+                });
                 break;
             }
             case AVCamManualSetupResultSessionConfigurationFailed:
             {
-                dispatch_async( dispatch_get_main_queue(), ^{
-                    NSString *message = NSLocalizedString( @"Unable to capture media", @"Alert message when something goes wrong during capture session configuration" );
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSString *message = NSLocalizedString(@"Unable to capture media", @"Alert message when something goes wrong during capture session configuration");
                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"AVCamManual" message:message preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString( @"OK", @"Alert OK button" ) style:UIAlertActionStyleCancel handler:nil];
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"Alert OK button") style:UIAlertActionStyleCancel handler:nil];
                     [alertController addAction:cancelAction];
                     [self presentViewController:alertController animated:YES completion:nil];
-                } );
+                });
                 break;
             }
         }
-    } );
+    });
 }
 
-//- (void)configureCamera
-//{
-//    dispatch_async( self.sessionQueue, ^{
-//        @try {
-//            [self autoExposureWithCompletionHandler:^(double ISO) {
-//                if ( [self.videoDevice isExposureModeSupported:AVCaptureExposureModeCustom] ) {
-//                    self.videoDevice.exposureMode = AVCaptureExposureModeCustom;
-//                    CMTime exposureDuration = CMTimeMake(self.videoDevice.exposureDuration.value, self.videoDevice.exposureDuration.timescale);
-//                    [self.videoDevice setExposureModeCustomWithDuration:exposureDuration /*CMTimeMakeWithSeconds((1.0/3.0), 1000*1000*1000)*/ ISO:[self valueForCameraProperty:CameraPropertyISO] completionHandler:nil];
-//                }
-//                else {
-//                    //NSLog( @"Exposure mode AVCaptureExposureModeCustom is not supported.");
-//                }
-//                [self configureCameraForHighestFrameRate:self.videoDevice];
-//            }];
-//            [self autoFocusWithCompletionHandler:^(double focus) {
-//                __autoreleasing NSError *error = nil;
-//                if ( [self.videoDevice lockForConfiguration:&error] ) {
-//                    if ( [self.videoDevice isFocusModeSupported:AVCaptureFocusModeLocked] ) {
-//                        self.videoDevice.focusMode = AVCaptureFocusModeLocked;
-//                        self.videoDevice.smoothAutoFocusEnabled = FALSE;
-//                    }
-//                    else {
-//                        //NSLog( @"Focus mode AVCaptureFocusModeLocked is not supported.");
-//                    }
-//                }
-//                else {
-//                    //NSLog( @"Could not lock device for configuration: %@", error );
-//                }
-//            }];
-//        } @catch (NSException *exception) {
-//            //NSLog( @"Error setting exposure mode to AVCaptureExposureModeCustom:\t%@\n%@.", error.description, exception.description);
-//        } @finally {
-//            [self lockDevice];
-//        }
-//    });
-//}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    dispatch_async( self.sessionQueue, ^{
-        if ( self.setupResult == AVCamManualSetupResultSuccess ) {
-            [self.session stopRunning];
-            //            [self removeObservers];
-        }
-    } );
-    
-    [super viewDidDisappear:animated];
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    
-    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-    
-    if ( UIDeviceOrientationIsPortrait( deviceOrientation ) || UIDeviceOrientationIsLandscape( deviceOrientation ) ) {
-        AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.cameraView.layer;
-        previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
-    }
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskAll;
-}
-
-- (BOOL)shouldAutorotate
-{
-    // Disable autorotation of the interface when recording is in progress
-    return FALSE;
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
-
-#pragma mark HUD
-
-//- (void)configureManualHUD
-//{
-//    if (self.videoDevice != nil)
-//    {
-//
-//        {
-//            self.ISOSlider.minimumValue = self.videoDevice.activeFormat.minISO;
-//            self.ISOSlider.maximumValue = self.videoDevice.activeFormat.maxISO;
-//            self.ISOSlider.value = self.videoDevice.ISO;
-//if ( &&
-//([self.videoDevice isExposureModeSupported:AVCaptureExposureModeCustom] && self.videoDevice.exposureMode == AVCaptureExposureModeCustom))
-//            self.ISOSlider.enabled = ( self.videoDevice.exposureMode == AVCaptureExposureModeCustom );
-//        }
-//    }
-//
-//
-//}
-
-#pragma mark Session Management
-
-// Should be called on the session queue
-
-- (IBAction)resumeInterruptedSession:(id)sender
-{
-    dispatch_async( self.sessionQueue, ^{
-        // The session might fail to start running, e.g. if a phone or FaceTime call is still using audio or video.
-        // A failure to start the session will be communicated via a session runtime error notification.
-        // To avoid repeatedly failing to start the session running, we only try to restart the session in the
-        // session runtime error handler if we aren't trying to resume the session running.
-        [self.session startRunning];
-        //        self.sessionRunning = self.session.isRunning;
-        if ( ! self.session.isRunning ) {
-            dispatch_async( dispatch_get_main_queue(), ^{
-                NSString *message = NSLocalizedString( @"Unable to resume", @"Alert message when unable to resume the session running" );
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"AVCamManual" message:message preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString( @"OK", @"Alert OK button" ) style:UIAlertActionStyleCancel handler:nil];
-                [alertController addAction:cancelAction];
-                [self presentViewController:alertController animated:YES completion:nil];
-            } );
-        }
-        else {
-            dispatch_async( dispatch_get_main_queue(), ^{
-                //                self.resumeButton.hidden = YES;
-            } );
-        }
-    } );
-}
-
-#pragma mark Device Configuration
+#pragma mark Device configuration
 
 - (dispatch_queue_t)device_configuration_queue
 {
@@ -505,26 +400,9 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
     return dls;
 }
 
-// NOTES:
-
-// WAITS can be scheduled first
-// WAITS must be in the order of operations
-// WAITS are scheduled on a serial queue
-// Serial queue operations start with WAIT
-
-// After WAITS are scheduled, the
-// SIGNALING and SIGNAL must be in pairs
-// All pairs must be in the proper order of operations
-
-
-
-// Adds a block to a serial queue (which controls the order in which it is executed) on an asynchronous thread (which allows other blocks to be added to the queue prior to execution of blocks delayed by semaphores)
-// The block signals the waiting semaphore (next method)
-
 - (void)lockDevice
 {
-    //    //NSLog(@"%s", __PRETTY_FUNCTION__);
-    
+    NSLog(@"%s", __PRETTY_FUNCTION__);
     [self.videoDevice unlockForConfiguration];
     
     dispatch_async([self device_configuration_queue], ^{
@@ -536,90 +414,102 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
                 dispatch_semaphore_signal([self device_lock_semaphore]);
             }
         } @catch (NSException *exception) {
-            //NSLog( @"Could not lock device for configuration: %@\t%@", exception.description, error.description);
+            //NSLog(@"Could not lock device for configuration: %@\t%@", exception.description, error.description);
         } @finally {
             
         }
     });
 }
 
-// Adds a block to a serial queue on an asynchronous thread, which allows subsequent blocks to be added in order to the same queue prior to its execution;
-// The block suspends execution using a waiting semaphore
-// After queueing the block, a signal semaphore resumes execution of the block in the previous method; that block then signals the waiting semaphore in thie block
 - (void)configureCameraForHighestFrameRateWithCompletionHandler:(void (^)(NSString *error_description))completionHandler
 {
-    dispatch_async([self device_configuration_queue], ^{
-        //        //NSLog(@"%s", __PRETTY_FUNCTION__);
-        dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
+    __block NSString *error = nil;
+    @try {
         AVCaptureDeviceFormat *bestFormat = nil;
         AVFrameRateRange *bestFrameRateRange = nil;
-        for ( AVCaptureDeviceFormat *format in [self.videoDevice formats] ) {
-            for ( AVFrameRateRange *range in format.videoSupportedFrameRateRanges ) {
-                if ( range.maxFrameRate > bestFrameRateRange.maxFrameRate ) {
+        for (AVCaptureDeviceFormat *format in [self.videoDevice formats]) {
+            for (AVFrameRateRange *range in format.videoSupportedFrameRateRanges) {
+                if (range.maxFrameRate > bestFrameRateRange.maxFrameRate) {
                     bestFormat = format;
                     bestFrameRateRange = range;
                 }
             }
         }
-        if ( bestFormat ) {
-            
-            @try {
-                self.videoDevice.activeFormat = bestFormat;
-                self.videoDevice.activeVideoMinFrameDuration = bestFrameRateRange.minFrameDuration;
-                self.videoDevice.activeVideoMaxFrameDuration = bestFrameRateRange.minFrameDuration;
-            } @catch (NSException *exception) {
-                if (exception) completionHandler(exception.description);
-            } @finally {
-                //                    [self lockDevice];
-            }
-        }
-    });
-    dispatch_semaphore_signal([self device_lock_semaphore]);
-}
-
-
-- (void)autoFocusWithCompletionHandler:(void (^)(double focus))completionHandler
-{
-    //    //NSLog(@"%s", __PRETTY_FUNCTION__);
-    __autoreleasing NSError *error;
-    @try {
-        if (![self.videoDevice isAdjustingFocus] && [self.videoDevice lockForConfiguration:&error]) {
-            [self.videoDevice setFocusMode:AVCaptureFocusModeAutoFocus];
+        if (bestFormat) {
+            self.videoDevice.activeFormat = bestFormat;
+            self.videoDevice.activeVideoMinFrameDuration = bestFrameRateRange.minFrameDuration;
+            self.videoDevice.activeVideoMaxFrameDuration = bestFrameRateRange.minFrameDuration;
+        } else {
+            error = @"Unable to configure camera for highest frame rate.";
         }
     } @catch (NSException *exception) {
-        //NSLog( @"ERROR auto-focusing:%@\t%@", exception.description, error.description);
+        error = exception.description;
     } @finally {
-        [self lockDevice];
-        //            while ([self.videoDevice isAdjustingFocus]) {
-        //
-        //            }
-        //            completionHandler([self.videoDevice lensPosition]);
+        completionHandler(error);
     }
 }
 
-- (void)autoExposureWithCompletionHandler:(void (^)(double ISO))completionHandler
+- (void)autoExposureWithCompletionHandler:(void (^)(NSString *error_description))completionHandler
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //                        //NSLog(@"BLOCK IS WAITING");
-        dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
-        //                            //NSLog(@"BLOCK IS SIGNALED");
-        if (![self.videoDevice isAdjustingExposure]) {
-            @try {
-                [self.videoDevice setExposureMode:AVCaptureExposureModeAutoExpose];
-            } @catch (NSException *exception) {
-                //NSLog( @"ERROR auto-focusing:\t%@", exception.description);
-            } @finally {
-                while ([self.videoDevice isAdjustingExposure]) {
-                    
-                }
-                completionHandler([self.videoDevice ISO]);
-                [self lockDevice];
-            }
-        } else {
-            //NSLog( @"Could not lock device for focus configuration: %@", nil );
+    __block NSString *error = nil;
+    @try {
+        [self.videoDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+    } @catch (NSException *exception) {
+        error = exception.description;
+    } @finally {
+        completionHandler(error);
+    }
+}
+
+- (void)autoFocusWithCompletionHandler:(void (^)(NSString *error_description))completionHandler
+{
+    __block NSString *error = nil;
+    @try {
+        [self.videoDevice setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+    } @catch (NSException *exception) {
+        error = exception.description;
+    } @finally {
+        completionHandler(error);
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    dispatch_async(self.sessionQueue, ^{
+        if (self.setupResult == AVCamManualSetupResultSuccess) {
+            [self.session stopRunning];
+            //            [self removeObservers];
         }
-        dispatch_semaphore_signal([self device_lock_semaphore]);
     });
+    
+    [super viewDidDisappear:animated];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    
+    if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation)) {
+        AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.cameraView.layer;
+        previewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
+    }
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return FALSE;
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
 }
 
 - (void)addObservers
@@ -636,7 +526,7 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 {
     __block UIButton *button;
     CameraProperty cameraProperty = (CameraProperty)[[self cameraPropertyNumberFormatter] numberFromString:(__bridge NSString * _Nonnull)(context)];
-    dispatch_async( dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         button = (UIButton *)[self.view viewWithTag:cameraProperty];
     });
     //    if (cameraProperty == CameraPropertyLensPosition || cameraProperty == CameraPropertyTorchLevel || cameraProperty == CameraPropertyVideoZoomFactor) {
@@ -663,14 +553,14 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
             CGFloat frameMinX  = -(CGRectGetMidX(self.scaleSliderScrollView.frame));
             CGFloat frameMaxX  =  CGRectGetMaxX(self.scaleSliderScrollView.frame) + fabs(CGRectGetMidX(self.scaleSliderScrollView.frame));
             CGFloat inset = fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
-            [button setTitle:[NSString stringWithFormat:@"%.1f", newFloatValue] forState:UIControlStateNormal];
-            [button setTintColor:[UIColor systemBlueColor]];
+            //            [button setTitle:[NSString stringWithFormat:@"%.1f", newFloatValue] forState:UIControlStateNormal];
+            //            [button setTintColor:[UIColor systemBlueColor]];
         });
     }
     
-    dispatch_async( dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [button setTintColor:[UIColor systemBlueColor]];
-    } );
+    });
     
     if (!(cameraProperty > 0) && !(cameraProperty < 7))
     {
@@ -771,14 +661,14 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 //                            float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
 //                            //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
 //                            double currentExposureDurationTimeScale = self.videoDevice.exposureDuration.timescale;
-//                            CMTime newExposureDuration = CMTimeMakeWithSeconds( exposureDuration, currentExposureDurationTimeScale);
+//                            CMTime newExposureDuration = CMTimeMakeWithSeconds(exposureDuration, currentExposureDurationTimeScale);
 //                            [self.videoDevice setExposureModeCustomWithDuration:newExposureDuration ISO:AVCaptureISOCurrent completionHandler:^(CMTime syncTime) {
 //                                self_block(@"videoDevice.exposureDuration");
 //                            }];
 //                        }
 //                    }
 //                } @catch (NSException *exception) {
-//                    //NSLog( @"Error configuring device:\t%@", exception.description);
+//                    //NSLog(@"Error configuring device:\t%@", exception.description);
 //                } @finally {
 //                    
 //                }
@@ -860,14 +750,14 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 //    //                        float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
 //    //                        //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
 //    //                        double currentExposureDurationTimeScale = self.videoDevice.exposureDuration.timescale;
-//    //                        CMTime newExposureDuration = CMTimeMakeWithSeconds( exposureDuration, currentExposureDurationTimeScale);
+//    //                        CMTime newExposureDuration = CMTimeMakeWithSeconds(exposureDuration, currentExposureDurationTimeScale);
 //    //                        [self.videoDevice setExposureModeCustomWithDuration:newExposureDuration ISO:AVCaptureISOCurrent completionHandler:^(CMTime syncTime) {
 //    //                            [self didChangeValueForKey:@"videoDevice.exposureDuration"];
 //    //                        }];
 //    //                    }
 //    //                }
 //    //            } @catch (NSException *exception) {
-//    //                //NSLog( @"Error configuring device:\t%@", exception.description);
+//    //                //NSLog(@"Error configuring device:\t%@", exception.description);
 //    //            } @finally {
 //    //
 //    //            }
@@ -888,7 +778,7 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 //        dispatch_async([self device_configuration_queue], ^{
 //            dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
 //            @try {
-//                if ( property == CameraPropertyLensPosition) {
+//                if (property == CameraPropertyLensPosition) {
 //                    BOOL adjustingFocus = [self.videoDevice isAdjustingFocus];
 //                    if (adjustingFocus) {
 //                        [self willChangeValueForKey:@"videoDevice.lensPosition"];
@@ -946,14 +836,14 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 //                        float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
 //                        //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
 //                        double currentExposureDurationTimeScale = self.videoDevice.exposureDuration.timescale;
-//                        CMTime newExposureDuration = CMTimeMakeWithSeconds( exposureDuration, currentExposureDurationTimeScale);
+//                        CMTime newExposureDuration = CMTimeMakeWithSeconds(exposureDuration, currentExposureDurationTimeScale);
 //                        [self.videoDevice setExposureModeCustomWithDuration:newExposureDuration ISO:AVCaptureISOCurrent completionHandler:^(CMTime syncTime) {
 //                            [self didChangeValueForKey:@"videoDevice.exposureDuration"];
 //                        }];
 //                    }
 //                }
 //            } @catch (NSException *exception) {
-//                //NSLog( @"Error configuring device:\t%@", exception.description);
+//                //NSLog(@"Error configuring device:\t%@", exception.description);
 //            } @finally {
 //
 //            }
@@ -961,120 +851,24 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 //    };
 //}
 
-- (IBAction)recordButtonEventHandler:(UIButton *)sender forEvent:(UIEvent *)event {
-    NSLog(@"Record button touched");
-    [self toggleRecordingWithCompletionHandler:^(BOOL isRunning, NSError * _Nonnull error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [(UIButton *)sender setSelected:isRunning];
-            [(UIButton *)sender setHighlighted:isRunning];
-        });
-    }];
-}
-
-- (NSValue *)cameraControlButtonRectForCameraProperty:(CameraProperty)cameraProperty
-{
-    CGRect cameraControlButtonRect = (CGRect)[(UIButton *)[self.cameraControls viewWithTag:cameraProperty] frame];
-    /*CGRectMake(CGRectGetMinX( (CGRect)[(UIButton *)[self viewWithTag:cameraProperty] frame]),
-     CGRectGetMinY( (CGRect)[(UIButton *)[self viewWithTag:[self selectedCameraProperty]] frame]),
-     CGRectGetWidth((CGRect)[(UIButton *)[self viewWithTag:[self selectedCameraProperty]] frame]),
-     CGRectGetHeight((CGRect)[(UIButton *)[self viewWithTag:[self selectedCameraProperty]] frame]));*/
-    
-    NSValue *selectedCameraPropertyValue = [NSValue valueWithCGRect:cameraControlButtonRect];
-    //    //NSLog(@"selectedCameraPropertyFrame (2): %f", selectedCameraPropertyFrame.origin.x);
-    
-    return selectedCameraPropertyValue;
-}
-
-- (UIButton *)selectedCameraControlButton
-{
-    UIButton *selectedCameraControlButton = (UIButton *)[self.cameraControls viewWithTag:cameraPropertyForSelectedButtonInIBOutletCollection(self.cameraPropertyButtons)];
-    
-    return selectedCameraControlButton;
-}
-
-
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-//{
-//    NSLog(@"CameraViewController\t\t\%s", __PRETTY_FUNCTION__);
-//    CameraProperty cameraProperty = (CameraProperty)[[touch gestureRecognizers] indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        BOOL isTapGesture = ([(UIGestureRecognizer *)obj isKindOfClass:[UITapGestureRecognizer class]]) ? TRUE : FALSE;
-//        *stop = isTapGesture;
-//
-//        if ([[touch view] isKindOfClass:[UIButton class]])
-//        {
-//            NSLog(@"UIButton tapped");
-//        } else {
-//            NSLog(@"UIButton not tapped");
-//        }
-//
-//        return isTapGesture;
-//    }];
-//    NSLog(@"Index %lu", cameraProperty);
-//    return (cameraProperty < 0.0 || cameraProperty > 7.0) ? FALSE : TRUE;
-//    return TRUE;
-//}
-//
-//- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
-//{
-//    NSLog(@"%s", __PRETTY_FUNCTION__);
-//    if (!self.scaleSliderControlView.isHidden)
-//    {
-//        [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-//            BOOL isPointInsideButtonRect = CGRectContainsPoint([button frame], point); //([button pointInside:[self convertPoint:point toView:button] withEvent:event]) ? TRUE : FALSE;
-//            if (isPointInsideButtonRect)
-//            {
-//                //                       CameraProperty selectedCameraProperty = [self selectedCameraProperty];
-//                //                       CameraProperty buttonTag = (CameraProperty)[button tag];
-//                //                       BOOL buttonCameraPropertiesIdentical = (selectedCameraProperty = buttonTag) ? TRUE : FALSE;
-//                //                       if (!buttonCameraPropertiesIdentical && ![button isSelected] )
-//                [button sendAction:@selector(cameraControlAction:) to:self forEvent:event];
-//            } else {
-//                switch ((CameraProperty)[button tag]) {
-//                    case CameraPropertyRecord:
-//                    {
-//                        [button sendAction:@selector(recordActionHandler:) to:self forEvent:event];
-//                        break;
-//                    }
-//
-//                    default:
-//                        break;
-//                }
-//            }
-//            *stop = isPointInsideButtonRect;
-//        }];
-//    }
-//
-//
-//
-//    return TRUE;
-//}
-//
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-//{
-//    return YES;
-//}
-
 - (IBAction)handleTapGesture:(UITapGestureRecognizer *)sender {
     [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BOOL isPointInsideButtonRect = CGRectContainsPoint([obj frame], [sender locationInView:self.cameraControls]);
+        CGRect convertedRect = [obj convertRect:[obj frame] toView:self.cameraControls];
+        BOOL isPointInsideButtonRect = CGRectContainsPoint(convertedRect, [sender locationInView:self.cameraControls]);
         if (isPointInsideButtonRect && [(UIButton *)obj isSelected])
-            [self cameraPropertyButtonEventHandler:(UIButton *)obj forEvent:nil];
+            [self cameraPropertyButtonEventHandler:(UIButton *)obj];
         *stop = isPointInsideButtonRect;
     }];
 }
 
-
 - (void)displayValuesForCameraControlProperties
 {
-    //    struct CameraProperties cameraProperties;
-    //    initCameraProperties(self.delegate, &cameraProperties);
-    
     [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         dispatch_async(dispatch_get_main_queue(), ^{
             double value = cameraPropertyFunc(self.videoDevice, (CameraProperty)[obj tag]);
             NSString *title = [[self cameraPropertyNumberFormatter] stringFromNumber:[NSNumber numberWithFloat:value]];
-            [obj setTitle:title forState:UIControlStateNormal];
-            [obj setTintColor:[UIColor systemBlueColor]];
+            //            [obj setTitle:title forState:UIControlStateNormal];
+            //            [obj setTintColor:[UIColor systemBlueColor]];
         });
     }];
 }
@@ -1112,81 +906,164 @@ static float(^scaleSliderValue)(CGRect, CGFloat, float, float) = ^float(CGRect s
 
 - (dispatch_source_t)textureQueueEvent
 {
-__block dispatch_source_t dispatch_source = _textureQueueEvent;
-dispatch_queue_t dispatch_queue = [self textureQueue];
-static dispatch_once_t onceToken;
-dispatch_once(&onceToken, ^{
-    dispatch_source = dispatch_source_create(DISPATCH_SOURCE_TYPE_DATA_REPLACE, 0, 0, dispatch_queue);
-    dispatch_source_set_event_handler(dispatch_source, ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            long value = dispatch_source_get_data(dispatch_source);
-            dispatch_source_merge_data([self textureQueueEvent], value);
-            [self.lockedCameraPropertyButton setTitle:[NSString stringWithFormat:@"%ld", value] forState:UIControlStateNormal];
+    __block dispatch_source_t dispatch_source = _textureQueueEvent;
+    dispatch_queue_t dispatch_queue = _textureQueue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dispatch_source = dispatch_source_create(DISPATCH_SOURCE_TYPE_DATA_REPLACE, 0, 0, dispatch_queue);
+        dispatch_source_set_event_handler(dispatch_source, ^{
+            dispatch_async([self device_configuration_queue], ^{
+                dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    float value = (float)dispatch_source_get_data(dispatch_source);
+                    NSLog(@"value: %f", value);
+                    CameraProperty property = (CameraProperty)self.lockedCameraPropertyButton.tag;
+                    @try {
+                        if (property == CameraPropertyLensPosition && [self.videoDevice isFocusModeSupported:AVCaptureFocusModeLocked])
+                        {
+                            [self willChangeValueForKey:@"videoDevice.lensPosition"];
+                            if (![self.videoDevice isAdjustingFocus])
+                                [self.videoDevice setFocusModeLockedWithLensPosition:value completionHandler:^(CMTime syncTime) {
+                                    [self didChangeValueForKey:@"videoDevice.lensPosition"];
+                                }];
+                        } else if (property == CameraPropertyISO) {
+                            //                        if (![self.videoDevice isAdjustingExposure]) {
+                            //                            [self willChangeValueForKey:@"self.ISO"];
+                            //                            float maxISO = self.videoDevice.activeFormat.maxISO;
+                            //                            float minISO = self.videoDevice.activeFormat.minISO;
+                            //                            float ISO = minISO + (value * (maxISO - minISO));
+                            //                            ISO = ((ISO > minISO) && (ISO < maxISO)) ? ISO : self.videoDevice.ISO;
+                            //                            [self.videoDevice setExposureModeCustomWithDuration:AVCaptureExposureDurationCurrent ISO:ISO completionHandler:^(CMTime syncTime) {
+                            //                                [self didChangeValueForKey:@"self.ISO"];
+                            //                            }];
+                            //                        }
+                        } else if (property == CameraPropertyTorchLevel && ([[NSProcessInfo processInfo] thermalState] != NSProcessInfoThermalStateCritical && [[NSProcessInfo processInfo] thermalState] != NSProcessInfoThermalStateSerious)) {
+                            [self willChangeValueForKey:@"videoDevice.torchLevel"];
+                            if (value == 0.0)
+                                [self->_videoDevice setTorchMode:AVCaptureTorchModeOff];
+                            else
+                                [self->_videoDevice setTorchModeOnWithLevel:value error:nil];
+                            [self didChangeValueForKey:@"videoDevice.torchLevel"];
+                        } else if (property == CameraPropertyVideoZoomFactor) {
+                            if (![self.videoDevice isRampingVideoZoom]) {
+                                [self willChangeValueForKey:@"videoZoomFactor"];
+                                float maxZoom = self.videoDevice.maxAvailableVideoZoomFactor;
+                                float minZoom = self.videoDevice.minAvailableVideoZoomFactor;
+                                float zoomValue = minZoom + (pow(value, 5.0) * (maxZoom - minZoom));
+                                zoomValue = (zoomValue < minZoom) ? minZoom : (zoomValue > maxZoom) ? maxZoom : zoomValue;
+                                //                        zoomValue = 1.0 + (zoomValue * (self.videoDevice.activeFormat.videoMaxZoomFactor - 1.0));
+                                [self.videoDevice setVideoZoomFactor:zoomValue];
+                                [self didChangeValueForKey:@"videoZoomFactor"];
+                            }
+                        } else if (property == CameraPropertyExposureDuration) {
+                            //                        if (![self.videoDevice isAdjustingExposure]) {
+                            //                            [self willChangeValueForKey:@"videoDevice.exposureDuration"];
+                            //                            double minDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.minExposureDuration);
+                            //                            double maxDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.maxExposureDuration);
+                            //                            // Map from duration to non-linear UI range 0-1
+                            //                            float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
+                            //                            //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
+                            //                            double currentExposureDurationTimeScale = self.videoDevice.exposureDuration.timescale;
+                            //                            CMTime newExposureDuration = CMTimeMakeWithSeconds(exposureDuration, currentExposureDurationTimeScale);
+                            //                            [self.videoDevice setExposureModeCustomWithDuration:newExposureDuration ISO:AVCaptureISOCurrent completionHandler:^(CMTime syncTime) {
+                            //                                self_block(@"videoDevice.exposureDuration");
+                            //                            }];
+                            //                        }
+                        }
+                    } @catch (NSException *exception) {
+                        //NSLog(@"Error configuring device:\t%@", exception.description);
+                    } @finally {
+                        
+                    }
+                });
+            });
+            dispatch_semaphore_signal([self device_lock_semaphore]);
         });
-//        const char *label = [[NSString stringWithFormat:@"%ld", property] cStringUsingEncoding:NSUTF8StringEncoding];
-//        dispatch_async(dispatch_queue, ^{
-//            CameraPropertyValue *cameraPropertyValueStruct = (CameraPropertyValue *)dispatch_get_specific(label);
-//            if (cameraPropertyValueStruct != NULL)
-//            {
-//                int value = *(int *)&cameraPropertyValueStruct->cameraPropertyValue;
-//
-//                free((void *)cameraPropertyValueStruct);
-//            }
-//        });
+        dispatch_set_target_queue(dispatch_source, dispatch_queue);
+        dispatch_resume(dispatch_source);
+        self->_textureQueueEvent = dispatch_source;
     });
-    dispatch_set_target_queue(dispatch_source, dispatch_queue);
-    dispatch_resume(dispatch_source);
-    self->_textureQueueEvent = dispatch_source;
-});
-
-return dispatch_source;
+    
+    return dispatch_source;
 }
+
+void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString *) = ^void (__weak __typeof__ (CameraViewController *) w_self, NSString *key) {
+    __typeof__(CameraViewController *) s_self = w_self;
+    [s_self didChangeValueForKey:key];
+};
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-//    CameraProperty property = (CameraProperty)[self.lockedCameraPropertyButton tag];
-//    void * p = &property;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        long v = (long)(scaleSliderValue(scrollView.frame, scrollView.contentOffset.x, 0.0, 1000.0));
-        //    printf("v: %d\n", v);
-        //    void * value = &v;
-            dispatch_source_merge_data([self textureQueueEvent], v);
-//        [self.scaleSliderControlTextLayer setString:[NSString stringWithFormat:@"%ld", v]];
+    __weak __typeof__(CameraViewController *) weakSelf = (CameraViewController *)self;
+    dispatch_async([self device_configuration_queue], ^{
+        dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            float value = [(ScaleSliderScrollView *)scrollView value].floatValue;
+            CameraProperty property = (CameraProperty)self.lockedCameraPropertyButton.tag;
+            @try {
+                if (property == CameraPropertyLensPosition && [self.videoDevice isFocusModeSupported:AVCaptureFocusModeLocked])
+                {
+                    [self willChangeValueForKey:@"videoDevice.lensPosition"];
+                    if (![self.videoDevice isAdjustingFocus] && (value != self.videoDevice.lensPosition))
+                        [self.videoDevice setFocusModeLockedWithLensPosition:value completionHandler:^(CMTime syncTime) {
+                            changedValueForKey(weakSelf, @"videoDevice.lensPosition");
+                        }];
+                } else if (property == CameraPropertyISO) {
+                    if (![self.videoDevice isAdjustingExposure]) {
+                        [self willChangeValueForKey:@"self.ISO"];
+                        float maxISO = self.videoDevice.activeFormat.maxISO;
+                        float minISO = self.videoDevice.activeFormat.minISO;
+                        float ISO = minISO + (value * (maxISO - minISO));
+                        ISO = ((ISO > minISO) && (ISO < maxISO)) ? ISO : self.videoDevice.ISO;
+                        [self.videoDevice setExposureModeCustomWithDuration:AVCaptureExposureDurationCurrent ISO:ISO completionHandler:^(CMTime syncTime) {
+                            changedValueForKey(weakSelf, @"self.ISO");
+                        }];
+                    }
+                } else if (property == CameraPropertyTorchLevel && ([[NSProcessInfo processInfo] thermalState] != NSProcessInfoThermalStateCritical && [[NSProcessInfo processInfo] thermalState] != NSProcessInfoThermalStateSerious)) {
+                    [self willChangeValueForKey:@"videoDevice.torchLevel"];
+                    if (value == 0.0)
+                        [self->_videoDevice setTorchMode:AVCaptureTorchModeOff];
+                    else
+                        [self->_videoDevice setTorchModeOnWithLevel:value error:nil];
+                    changedValueForKey(weakSelf, @"videoDevice.torchLevel");
+                } else if (property == CameraPropertyVideoZoomFactor) {
+                    if (![self.videoDevice isRampingVideoZoom]) {
+                        [self willChangeValueForKey:@"videoZoomFactor"];
+                        float maxZoom = self.videoDevice.maxAvailableVideoZoomFactor;
+                        float minZoom = self.videoDevice.minAvailableVideoZoomFactor;
+                        float zoomValue = minZoom + (pow(value, 5.0) * (maxZoom - minZoom));
+                        zoomValue = (zoomValue < minZoom) ? minZoom : (zoomValue > maxZoom) ? maxZoom : zoomValue;
+                        //                        zoomValue = 1.0 + (zoomValue * (self.videoDevice.activeFormat.videoMaxZoomFactor - 1.0));
+                        [self.videoDevice setVideoZoomFactor:zoomValue];
+                        changedValueForKey(weakSelf, @"videoZoomFactor");
+                    }
+                } else if (property == CameraPropertyExposureDuration) {
+                    if (![self.videoDevice isAdjustingExposure]) {
+                        [self willChangeValueForKey:@"videoDevice.exposureDuration"];
+                        double minDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.minExposureDuration);
+                        double maxDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.maxExposureDuration);
+                        // Map from duration to non-linear UI range 0-1
+                        float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
+                        //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
+                        double currentExposureDurationTimeScale = self.videoDevice.exposureDuration.timescale;
+                        CMTime newExposureDuration = CMTimeMakeWithSeconds(exposureDuration, currentExposureDurationTimeScale);
+                        [self.videoDevice setExposureModeCustomWithDuration:newExposureDuration ISO:AVCaptureISOCurrent completionHandler:^(CMTime syncTime) {
+                            changedValueForKey(weakSelf, @"videoDevice.exposureDuration");
+                        }];
+                    }
+                }
+            } @catch (NSException *exception) {
+                //NSLog(@"Error configuring device:\t%@", exception.description);
+            } @finally {
+                
+            }
+        });
     });
-    
-//    dispatch_queue_set_specific([self textureQueue], p, (void *)value, NULL/*(dispatch_function_t)free*/);
-//
-    
-    //    CameraPropertyValue *cameraPropertyValueStruct = (CameraPropertyValue *)malloc(sizeof(CameraPropertyValue));
-    //    if (cameraPropertyValueStruct != NULL)
-    //    {
-    //        float v = scaleSliderValue(scrollView.frame, scrollView.contentOffset.x, 0.0, 1.0);
-    //        void * value = &v;
-    //        cameraPropertyValueStruct->cameraPropertyValue = value;
-    //        CameraProperty property = CameraPropertyISO;
-    //        const char *label = [[NSString stringWithFormat:@"%ld", (long)property] cStringUsingEncoding:NSUTF8StringEncoding];
-    //        dispatch_queue_set_specific([self textureQueue], label, cameraPropertyValueStruct, NULL);
-    //        dispatch_source_merge_data([self textureQueueEvent], (long)property);
-    //    }
-    //    dispatch_source_merge_data([[CameraPropertyDispatchSource dispatcher] dispatch_source_value_getter], 1);
-    //    dispatch_queue_set_specific(dispatch_get_main_queue(), &CameraPropertyValueKey, CameraPropertyValueKey, NULL);
-    
-    //    if ((!self.scaleSliderControlView.isHidden && (scrollView.isDragging || scrollView.isTracking || scrollView.isDecelerating)))
-    //    {
-    //        //        dispatch_async(dispatch_get_main_queue(), ^{
-    //        //            UIButton *button = selectedButtonInIBOutletCollection(self.cameraPropertyButtons);
-    //        void(^block)(CameraProperty) = ^(CameraProperty property) {
-    //            void * p = &property;
-    //            float v = scaleSliderValue(scrollView.frame, scrollView.contentOffset.x, 0.0, 1.0);
-    //            printf("\np: %lu\tv: %f\n", property, v);
-    //            void * value = &v;
-    //            dispatch_source_merge_data([[CameraPropertyDispatchSource dispatcher] dispatch_source_value_getter], property);
-    //            dispatch_queue_set_specific([[CameraPropertyDispatchSource dispatcher] dispatch_source_queue_value_getter], p, (void *)value, NULL/*(dispatch_function_t)free*/);
-    //        };
-    //        block(CameraPropertyRecord);
-    //
-    //        //            [button setTitle:[NSString stringWithFormat:@"%f", value] forState:UIControlStateNormal];
-    //        //        });
-    //    }
+    dispatch_semaphore_signal([self device_lock_semaphore]);
+    // dispatch_source_merge_data([self textureQueueEvent], value);
+    //    dispatch_async(dispatch_get_main_queue(), ^{
+    //        [self.lockedCameraPropertyButton setTitle:[NSString stringWithFormat:@"%lu", value] forState:UIControlStateNormal];
+    //    });
 }
 
 - (NSNumberFormatter *)cameraPropertyNumberFormatter
@@ -1206,7 +1083,7 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
     switch (cameraProperty) {
         case CameraPropertyExposureDuration:
         {
-            cameraPropertyValue = (double)videoDevice.exposureDuration.value;
+            cameraPropertyValue = (double)videoDevice.exposureDuration.timescale / (double)videoDevice.exposureDuration.value;
             break;
         }
         case CameraPropertyISO:
@@ -1232,7 +1109,7 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
             
         default:
         {
-            cameraPropertyValue = 5.0;
+            cameraPropertyValue = 0.0;
             break;
         }
     }
@@ -1240,25 +1117,78 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
     return cameraPropertyValue;
 }
 
-- (void)toggleRecordingWithCompletionHandler:(void (^)(BOOL isRunning, NSError *error))completionHandler
+- (IBAction)toggleRecording:(UIButton *)sender {
+    [self toggleRecordingWithCompletionHandler:^(BOOL isRecording, NSError * _Nonnull error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [sender setSelected:isRecording];
+            [sender setHighlighted:isRecording];
+        });
+    }];
+}
+
+- (IBAction)toggleExposureDuration:(UIButton *)sender {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __autoreleasing NSError *error = nil;
+        @try {
+            if ([self.videoDevice lockForConfiguration:&error])
+            {
+                NSLog(@"Configuring camera for highest frame rate...");
+                [self configureCameraForHighestFrameRateWithCompletionHandler:^(NSString *error_description) {
+                    if (error_description)
+                    {
+                        NSLog(@"Error configuring camera for highest frame rate: %@", error_description);
+                    } else {
+                        NSLog(@"Configured camera for highest frame rate.");
+                        if ([sender isSelected])
+                        {
+                            NSLog(@"Enabling auto-exposure...");
+                            [self autoExposureWithCompletionHandler:^(NSString *error_description) {
+                                if (error_description)
+                                {
+                                    NSLog(@"Error setting auto-exposure: %@", error_description);
+                                } else {
+                                    NSLog(@"Auto-exposure enabled.");
+                                    NSLog(@"Enabling auto-focus...");
+                                    [self autoFocusWithCompletionHandler:^(NSString *error_description) {
+                                        if (error_description)
+                                        {
+                                            NSLog(@"Error setting auto-exposure: %@", error_description);
+                                        } else {
+                                            NSLog(@"Auto-focus enabled.");
+                                        }
+                                    }];
+                                }
+                            }];
+                            [sender setSelected:FALSE];
+                            [sender setHighlighted:FALSE];
+                        } else {
+                            
+                            [sender setSelected:TRUE];
+                            [sender setHighlighted:TRUE];
+                        }
+                    }
+                }];
+            }
+        } @catch (NSException *exception) {
+            NSLog(@"\n\n%@\n%@\n\n", error.description, exception.description);
+        } @finally {
+            [self.videoDevice unlockForConfiguration];
+            
+        }
+    });
+}
+
+- (void)toggleRecordingWithCompletionHandler:(void (^)(BOOL isRecording, NSError *error))completionHandler
 {
-    //NSLog(@"%s", __PRETTY_FUNCTION__);
-    // Retrieve the video preview layer's video orientation on the main queue before entering the session queue. We do this to ensure UI
-    // elements are accessed on the main thread and session configuration is done on the session queue.
     AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.cameraView.layer;
     AVCaptureVideoOrientation previewLayerVideoOrientation = previewLayer.connection.videoOrientation;
-    dispatch_async( self.sessionQueue, ^{
-        if ( ! self.movieFileOutput.isRecording ) {
-            dispatch_async( dispatch_get_main_queue(), ^{
-                //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle"] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-                //[self.recordButton setTintColor:[UIColor whiteColor]];
-            });
-            if ( [UIDevice currentDevice].isMultitaskingSupported ) {
-                // Setup background task. This is needed because the -[captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:]
-                // callback is not received until AVCamManual returns to the foreground unless you request background execution time.
-                // This also ensures that there will be time to write the file to the photo library when AVCamManual is backgrounded.
-                // To conclude this background execution, -endBackgroundTask is called in
-                // -[captureOutput:didFinishRecordingToOutputFileAtURL:fromConnections:error:] after the recorded file has been saved.
+    dispatch_async(self.sessionQueue, ^{
+        if (! self.movieFileOutput.isRecording) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle"] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+//                //[self.recordButton setTintColor:[UIColor whiteColor]];
+//            });
+            if ([UIDevice currentDevice].isMultitaskingSupported) {
                 self.backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
             }
             AVCaptureConnection *movieConnection = [self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
@@ -1272,66 +1202,58 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
         }
         else {
             [self.movieFileOutput stopRecording];
-            dispatch_async( dispatch_get_main_queue(), ^{
-                //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle"] imageWithTintColor:[UIColor redColor]] forState:UIControlStateNormal];
-                //[self.recordButton setTintColor:[UIColor redColor]];
-            });
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle"] imageWithTintColor:[UIColor redColor]] forState:UIControlStateNormal];
+//                //[self.recordButton setTintColor:[UIColor redColor]];
+//            });
             completionHandler(FALSE, nil);
         }
-    } );
+    });
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
 {
     //NSLog(@"%s", __PRETTY_FUNCTION__);
-    // Enable the Record button to let the user stop the recording
-    dispatch_async( dispatch_get_main_queue(), ^{
-        //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle.fill"] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-        //[self.recordButton setTintColor:[UIColor whiteColor]];
-    });
+//    // Enable the Record button to let the user stop the recording
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle.fill"] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+//        //[self.recordButton setTintColor:[UIColor whiteColor]];
+//    });
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-    // Note that currentBackgroundRecordingID is used to end the background task associated with this recording.
-    // This allows a new recording to be started, associated with a new UIBackgroundTaskIdentifier, once the movie file output's isRecording property
-    // is back to NO — which happens sometime after this method returns.
-    // Note: Since we use a unique file path for each recording, a new recording will not overwrite a recording currently being saved.
     UIBackgroundTaskIdentifier currentBackgroundRecordingID = self.backgroundRecordingID;
     self.backgroundRecordingID = UIBackgroundTaskInvalid;
     
     dispatch_block_t cleanup = ^{
-        if ( [[NSFileManager defaultManager] fileExistsAtPath:outputFileURL.path] ) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:outputFileURL.path]) {
             [[NSFileManager defaultManager] removeItemAtURL:outputFileURL error:nil];
         }
         
-        if ( currentBackgroundRecordingID != UIBackgroundTaskInvalid ) {
+        if (currentBackgroundRecordingID != UIBackgroundTaskInvalid) {
             [[UIApplication sharedApplication] endBackgroundTask:currentBackgroundRecordingID];
         }
     };
     
     BOOL success = YES;
     
-    if ( error ) {
-        //NSLog( @"Error occurred while capturing movie: %@", error );
+    if (error) {
+        //NSLog(@"Error occurred while capturing movie: %@", error);
         success = [error.userInfo[AVErrorRecordingSuccessfullyFinishedKey] boolValue];
     }
-    if ( success ) {
-        // Check authorization status
-        [PHPhotoLibrary requestAuthorization:^( PHAuthorizationStatus status ) {
-            if ( status == PHAuthorizationStatusAuthorized ) {
-                // Save the movie file to the photo library and cleanup
+    if (success) {
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            if (status == PHAuthorizationStatusAuthorized) {
                 [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-                    // In iOS 9 and later, it's possible to move the file into the photo library without duplicating the file data.
-                    // This avoids using double the disk space during save, which can make a difference on devices with limited free disk space.
                     PHAssetResourceCreationOptions *options = [[PHAssetResourceCreationOptions alloc] init];
                     options.shouldMoveFile = YES;
                     PHAssetCreationRequest *changeRequest = [PHAssetCreationRequest creationRequestForAsset];
                     [changeRequest addResourceWithType:PHAssetResourceTypeVideo fileURL:outputFileURL options:options];
-                } completionHandler:^( BOOL success, NSError *error ) {
-                    if ( ! success ) {
-                        //NSLog( @"Could not save movie to photo library: %@", error );
-                    }
+                } completionHandler:^(BOOL success, NSError *error) {
+//                    if (! success) {
+//                        //NSLog(@"Could not save movie to photo library: %@", error);
+//                    }
                     cleanup();
                 }];
             }
@@ -1345,20 +1267,10 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
     }
 }
 
-//- (void)handleTouchForButtonWithCameraProperty:(CameraProperty)cameraProperty
-//{
-//    CameraProperty selectedButtonCameraProperty = cameraPropertyForSelectedButtonInIBOutletCollection(self.cameraPropertyButtons);
-//    BOOL cameraPropertiesIdentical = (cameraProperty == selectedButtonCameraProperty) ? TRUE : FALSE;
-//    [self deselectCameraControlButtonForCameraProperty:selectedButtonCameraProperty];
-//    [self selectCameraControlButtonForCameraProperty:(cameraPropertiesIdentical) ? nil : cameraProperty];
-//
-//}
-//
-
-- (IBAction)cameraPropertyButtonEventHandler:(UIButton *)sender forEvent:(UIEvent *)event
+- (IBAction)cameraPropertyButtonEventHandler:(UIButton *)sender
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    CameraProperty selectedButtonCameraProperty = ([sender isSelected]) ? (CameraProperty)[sender tag] : cameraPropertyForSelectedButtonInIBOutletCollection(self.cameraPropertyButtons);
+    NSLog(@"Button tag: %lu", sender.tag);
+    CameraProperty selectedButtonCameraProperty = ([sender isSelected]) ? (CameraProperty)[sender tag] : cameraPropertyForSelectedButtonInIBOutletCollection(self.buttons);
     CameraProperty senderButtonCameraProperty = (CameraProperty)[sender tag];
     BOOL senderButtonCameraPropertyEqualsSelectedButtonCameraProperty = (senderButtonCameraProperty == selectedButtonCameraProperty) ? TRUE : FALSE;
     BOOL shouldSelectSender = (!senderButtonCameraPropertyEqualsSelectedButtonCameraProperty && (selectedButtonCameraProperty == CameraPropertyInvalid)) ? TRUE : FALSE;
@@ -1367,78 +1279,65 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
         self.lockedCameraPropertyButton = (shouldSelectSender) ? sender : nil; //requestButtonInIBOutletCollectionWithCameraProperty(self.cameraPropertyButtons, senderButtonCameraProperty) : nil;
         [sender setSelected:shouldSelectSender];
         [sender setHighlighted:shouldSelectSender];
-        //            UIImage *symbol = [[(UIButton *)selectedButton currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleLargeTitle]];
-        //            [(UIButton *)selectedButton setImage:symbol forState:UIControlStateNormal];
+        //        UIImage *symbol = (shouldSelectSender) ? [[(UIButton *)sender currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleLargeTitle]] : [[(UIButton *)sender currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleSmall]];
+        //        [(UIButton *)sender setImage:symbol forState:UIControlStateNormal];
         [self.scaleSliderControlViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [(UIView *)obj setHidden:!shouldSelectSender];
             [(UIView *)obj setNeedsDisplay];
         }];
-//        [self.scaleSliderControlTextLayer setHidden:!shouldSelectSender];
-//        [self.scaleSliderControlTextLayer setNeedsLayout];
+        if (!self.scaleSliderScrollView.isHidden)
+        {
+            NSRange minMaxValues = [self cameraPropertyValueRange:senderButtonCameraProperty videoDevice:self.videoDevice];
+            [self.scaleSliderScrollView setMinimumValue:[NSNumber numberWithDouble:minMaxValues.location]];
+            [self.scaleSliderScrollView setMaximumValue:[NSNumber numberWithDouble:minMaxValues.length]];
+            [self.scaleSliderScrollView setValue:[NSNumber numberWithDouble:cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty)]];
+        }
     });
-    // if the sender is selected, deselect it and stop
-    // if the sender is not selected, select it if there is no other button selected
+}
+
+- (NSRange)cameraPropertyValueRange:(CameraProperty)cameraProperty videoDevice:(AVCaptureDevice *)videoDevice
+{
+    NSRange propertyValueRange;
+    switch (cameraProperty) {
+        case CameraPropertyExposureDuration:
+        {
+            propertyValueRange = NSMakeRange(CMTimeGetSeconds(videoDevice.activeFormat.minExposureDuration), CMTimeGetSeconds(videoDevice.activeFormat.maxExposureDuration));
+            break;
+        }
+        case CameraPropertyISO:
+        {
+            propertyValueRange = NSMakeRange(videoDevice.activeFormat.minISO, videoDevice.activeFormat.maxISO);
+            break;
+        }
+        case CameraPropertyLensPosition:
+        {
+            propertyValueRange = NSMakeRange(0.0, 1.0);
+            break;
+        }
+        case CameraPropertyTorchLevel:
+        {
+            propertyValueRange = NSMakeRange(0.0, 1.0);
+            break;
+        }
+        case CameraPropertyVideoZoomFactor:
+        {
+            propertyValueRange = NSMakeRange(0.0, 1.0);
+            break;
+        }
+            
+        default:
+        {
+            propertyValueRange = NSMakeRange(0.0, 1.0);
+            break;
+        }
+    }
     
-    //        CameraProperty senderButtonCameraProperty = (CameraProperty)[sender tag];
-    //        CameraProperty buttonCameraProperty = (CameraProperty)[button tag];
-    //
-    //        (isButtonSelected) ? (CameraProperty)[button tag] : (isSenderSelected) ? senderButtonCameraProperty : CameraPropertyInvalid;
-    //
-    //        BOOL shouldSelectSender = (!isSenderSelected) ? !isSenderSelected : TRUE;
-    //
-    //        dispatch_async(dispatch_get_main_queue(), ^{
-    //                [sender setSelected:shouldSelectSender];
-    //                [sender setHighlighted:shouldSelectSender];
-    //                //            UIImage *symbol = [[(UIButton *)selectedButton currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleLargeTitle]];
-    //                //            [(UIButton *)selectedButton setImage:symbol forState:UIControlStateNormal];
-    //                //                    [self.scaleSliderControlView setHidden:!senderCameraPropertyIsEqualToSelectedCameraProperty];
-    //                //                    [self.scaleSliderOverlayView setNeedsDisplay];
-    //            });
-    //
-    //    CameraProperty selectedButtonCameraProperty = cameraPropertyForSelectedButtonInIBOutletCollection(self.cameraPropertyButtons);
-    //    CameraProperty senderButtonCameraProperty = (CameraProperty)[sender tag];
-    //    BOOL senderCameraPropertyIsEqualToSelectedCameraProperty = (senderButtonCameraProperty == selectedButtonCameraProperty) ? TRUE : FALSE;
-    //    if (senderCameraPropertyIsEqualToSelectedCameraProperty)
-    //    {
-    //        dispatch_async(dispatch_get_main_queue(), ^{
-    //            [sender setSelected:!senderCameraPropertyIsEqualToSelectedCameraProperty];
-    //            [sender setHighlighted:!senderCameraPropertyIsEqualToSelectedCameraProperty];
-    //            //            UIImage *symbol = [[(UIButton *)selectedButton currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleLargeTitle]];
-    //            //            [(UIButton *)selectedButton setImage:symbol forState:UIControlStateNormal];
-    //            //                    [self.scaleSliderControlView setHidden:!senderCameraPropertyIsEqualToSelectedCameraProperty];
-    //            //                    [self.scaleSliderOverlayView setNeedsDisplay];
-    //        });
-    //    }
-    //
-    //    //            [self selectCameraControlButtonForCameraProperty:(cameraPropertiesIdentical) ? nil : senderButtonCameraProperty];
-    //    //            dispatch_async(dispatch_get_main_queue(), ^{
-    //    //                // Hide the slider? TRUE if the sender button is selected || if the sender button is not selected && if the slider is showing (TRUE)
-    //    //                [self.scaleSliderControlView setHidden:([(UIButton *)sender isSelected] && !(self.scaleSliderControlView.isHidden))]; // is the sender is not already selected (and, therefore, displaying the slider,
-    //    //                [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-    //    //                    dispatch_async(dispatch_get_main_queue(), ^{
-    //    //                        BOOL shouldSelect = ([sender isEqual:(UIButton *)obj]) ? TRUE : FALSE; // if the enumerated button and the sender button are the same AND the sender button is not already selected...
-    //    //                        [(UIButton *)obj setSelected:shouldSelect];
-    //    //                        [(UIButton *)obj setHighlighted:shouldSelect];
-    //    //                        UIImage *symbol = (shouldSelect) ? [[(UIButton *)obj currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleTitle2 /* configurationWithScale:UIImageSymbolScaleSmall*/]] : [[(UIButton *)obj currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleLargeTitle]];
-    //    //                        [(UIButton *)obj setImage:symbol forState:UIControlStateNormal];
-    //    //                        if (shouldSelect)
-    //    //                        {
-    //    //                                                [self.scaleSliderControlView setHidden:(!shouldSelect)];
-    //    //                            //                            [self.scaleSliderOverlayView setSelectedCameraPropertyValue:[self selectedCameraPropertyFrame]];
-    //    //                                                        [self.scaleSliderOverlayView setNeedsDisplay];
-    //    //
-    //    //                            float value = cameraPropertyFunc(self.videoDevice, (CameraProperty)[(UIButton *)obj tag]);
-    //    ////                            NSLog(@"Value for scroll view content offset in cameraControlAction BEFORE normalization: %f", value);
-    //    //                            value = (value < 0.0) ? 0.0 : (value > 10.0) ? 10.0 : value;
-    //    ////                            NSLog(@"Value for scroll view content offset in cameraControlAction AFTER NORMALIZATION,r: %f", value);
-    //    //                            [self.scaleSliderScrollView setContentOffset:CGPointMake(-CGRectGetMidX(self.scaleSliderScrollView.frame) + (self.scaleSliderScrollView.contentSize.width * value), 0.0) animated:TRUE];//  scrollRectToVisible:scrollRect animated:FALSE];
-    //    //                            //                            [self setMeasuringUnit:[[self cameraPropertyNumberFormatter] stringFromNumber:[NSNumber numberWithFloat:(value * 10)]]];
-    //    //                            //                    //NSLog(@"origin x (1): %f", ((UIButton *)obj).frame.origin.x);
-    //    //                        }
-    //    //                    });
-    //    //                }];
-    //    //            });
-    //    //    });
+    return propertyValueRange;
+}
+
+- (void)setLockedCameraButton:(UIButton *)lockedCameraButton
+{
+    self->_lockedCameraButton = lockedCameraButton;
 }
 
 @end

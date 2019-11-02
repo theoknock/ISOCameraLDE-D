@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol ButtonCollectionViewDelegate <NSObject>
 
-@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cameraPropertyButtons;
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *buttons;
 - (UIButton *)buttonWithTag:(NSUInteger)tag;
 
 @end

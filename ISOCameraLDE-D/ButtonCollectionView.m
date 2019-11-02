@@ -48,7 +48,8 @@ static NSString * const reuseIdentifier = @"ButtonCollectionViewCell";
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.buttonCollectionViewDelegate.cameraPropertyButtons.count;
+    NSLog(@"Button count: %lu", self.buttonCollectionViewDelegate.buttons.count);
+    return self.buttonCollectionViewDelegate.buttons.count;
 }
 
 - (ButtonCollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -58,9 +59,9 @@ static NSString * const reuseIdentifier = @"ButtonCollectionViewCell";
     [button setFrame:cell.contentView.frame];
     [cell.contentView addSubview:button];
     
-    [cell.contentView.layer setBorderColor:[UIColor whiteColor].CGColor];
-    [cell.contentView setBackgroundColor:[UIColor darkTextColor]];
-    [cell.contentView.layer setBorderWidth:0.25];
+//    [cell.contentView.layer setBorderColor:[UIColor whiteColor].CGColor];
+    [cell.contentView setBackgroundColor:[UIColor blackColor]];
+//    [cell.contentView.layer setBorderWidth:0.25];
 
     return cell;
 }

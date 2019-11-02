@@ -11,7 +11,6 @@
 #import "CameraControls.h"
 #import "ScaleSliderControlView.h"
 #import "ScaleSliderScrollView.h"
-#import "ScaleSliderView.h"
 #import "ButtonCollectionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -33,7 +32,6 @@ typedef enum : NSUInteger {
 @property (weak, nonatomic) IBOutlet CameraControls *cameraControls;
 @property (weak, nonatomic) IBOutlet ScaleSliderControlView *scaleSliderControlView;
 @property (weak, nonatomic) IBOutlet ScaleSliderScrollView *scaleSliderScrollView;
-@property (weak, nonatomic) IBOutlet ScaleSliderView *scaleSliderView;
 
 @property (strong, nonatomic) __block AVCaptureDevice *videoDevice;
 
@@ -41,11 +39,11 @@ typedef enum : NSUInteger {
 @property (nonatomic, getter=ISO, setter=setISO:) float ISO;
 @property (nonatomic, getter=isRecording, setter=setIsRecording:) BOOL isRecording;
 
-- (void)autoExposureWithCompletionHandler:(void (^)(double ISO))completionHandler;
+- (void)autoExposureWithCompletionHandler:(void (^)(NSString *error_description))completionHandler;
 
-- (void)autoFocusWithCompletionHandler:(void (^)(double focus))completionHandler;
+- (void)autoFocusWithCompletionHandler:(void (^)(NSString *error_description))completionHandler;
 
-- (void)toggleRecordingWithCompletionHandler:(void (^)(BOOL isRunning, NSError *error))completionHandler;
+- (void)toggleRecordingWithCompletionHandler:(void (^)(BOOL isRecording, NSError *error))completionHandler;
 - (void)setTorchLevel:(float)torchLevel;
 
 - (void)scrollSliderControlToItemAtIndexPath:(NSIndexPath *)indexPath;
@@ -72,10 +70,11 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) __block dispatch_source_t textureQueueEvent;
 
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *scaleSliderControlViews;
-
+@property (strong, nonatomic, setter=setLockedCameraButton:) UIButton * lockedCameraButton;
 
 @property (weak, nonatomic) IBOutlet ButtonCollectionView *buttonCollectionView;
 - (UIButton *)buttonWithTag:(NSUInteger)tag;
+@property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *buttons;
 
 
 @end
