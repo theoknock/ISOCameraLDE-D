@@ -8,12 +8,6 @@
 
 #import "ScaleSliderScrollView.h"
 
-@interface ScaleSliderScrollView (NormalizedValue)
-
-@property (nonatomic) CGFloat normalizedValue;
-
-@end
-
 @implementation ScaleSliderScrollView
 
 - (void)awakeFromNib
@@ -60,7 +54,7 @@
                                                   NSFontAttributeName:[UIFont systemFontOfSize:14.0],
                                                   NSParagraphStyleAttributeName:centerAlignedParagraphStyle};
     
-    NSString *valueString = [NSString stringWithFormat:@"%.2f", self.scaledValue.floatValue];
+    NSString *valueString = [NSString stringWithFormat:@"%.2f", self.value.floatValue];
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:valueString attributes:centerAlignedTextAttributes];
     ((CATextLayer *)scaleSliderValueTextLayer).string = attributedString;
 

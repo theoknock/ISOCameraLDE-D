@@ -1006,7 +1006,7 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
     dispatch_async([self device_configuration_queue], ^{
         dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
         dispatch_async(dispatch_get_main_queue(), ^{
-            float value = [(ScaleSliderScrollView *)scrollView value].floatValue;
+            float value = ((ScaleSliderScrollView *)scrollView).value.floatValue;
             //            NSLog(@"value %f", value);
             CameraProperty property = (CameraProperty)self.lockedCameraPropertyButton.tag;
             @try {
@@ -1273,7 +1273,7 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
 }
 
 static double (^percentageInRange)(double, double, double) = ^double(double value, double minimumValue, double maximumValue) {
-    float value_perc = ((value - minimumValue)) / (maximumValue - minimumValue);
+    float value_perc = ((value - minimumValue) * 100.0) / (maximumValue - minimumValue);
     
     return value_perc;
 };
@@ -1307,13 +1307,15 @@ static double (^percentageInRange)(double, double, double) = ^double(double valu
                 float value_perc = percentageInRange(cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty), minMaxValues.firstObject.doubleValue, minMaxValues.lastObject.doubleValue);
                 NSLog(@"value_perc %f", value_perc);
                 // 2. Multiply by content size width
-                float contentOffsetX = value_perc * CGRectGetWidth(self.scaleSliderScrollView.frame);
-                NSLog(@"contentOffsetX %f", contentOffsetX);
+                float contentOffsetX = self.scaleSliderScrollView.contentSize.width * (value_perc * .01); //CGRectGetWidth(self.scaleSliderScrollView.frame);
+                
                 
                 // 3. Add product to -207 (use left-right inset to generate)
-                contentOffsetX -= 207;//fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
+                contentOffsetX = contentOffsetX - fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
                 // 4. Set content offset x to sum
-                [self.scaleSliderScrollView setContentOffset:CGPointMake(contentOffsetX, 0.0) animated:FALSE];
+                NSLog(@"contentOffsetX %f", contentOffsetX);
+                [self.scaleSliderScrollView setContentOffset:CGPointMake(contentOffsetX, self.scaleSliderScrollView.contentOffset.y) animated:FALSE];
+                NSLog(@"contentOffsetX (actual) %f", self.scaleSliderScrollView.contentOffset.x);
                 // 621 > ContentOffset.x > -207
             }
         });
