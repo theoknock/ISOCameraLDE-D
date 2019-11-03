@@ -13,7 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIScrollView (Value)
 
+
+@property(assign, nonatomic) NSNumber * scaledValue;
 @property(assign, nonatomic) NSNumber * value;
+
 @property(assign, nonatomic) NSNumber * minimumValue;
 @property(assign, nonatomic) NSNumber * maximumValue;
 

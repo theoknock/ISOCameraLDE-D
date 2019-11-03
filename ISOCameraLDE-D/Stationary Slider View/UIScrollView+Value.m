@@ -11,7 +11,7 @@
 
 @implementation UIScrollView (Value)
 
-@dynamic minimumValue, maximumValue, value;
+@dynamic minimumValue, maximumValue, scaledValue;
 
 - (void)setMinimumValue:(NSNumber *)minimumValue
 {
@@ -41,13 +41,29 @@
     return objc_getAssociatedObject(self, @selector(maximumValue));
 }
 
+- (NSNumber *)scaledValue
+{
+//    double normalizedValue = (MAX(self.maximumValue.floatValue, self.minimumValue.floatValue) - MIN(self.minimumValue.floatValue, self.maximumValue.floatValue)) * (self.bounds.origin.x - (fabs(CGRectGetMidX(self.frame) - CGRectGetMinX(self.frame))) / (self.contentSize.width - (fabs(CGRectGetMidX(self.frame) - CGRectGetMinX(self.frame))) + MIN(self.minimumValue.floatValue, self.maximumValue.floatValue)));
+    double normalizedValue = self.maximumValue.floatValue * ((self.contentOffset.x + (fabs(CGRectGetMidX(self.frame) - CGRectGetMinX(self.frame)))) / self.contentSize.width);
+//    normalizedValue = (normalizedValue < MIN(self.minimumValue.floatValue, self.maximumValue.floatValue)) ? MIN(self.minimumValue.floatValue, self.maximumValue.floatValue) : (normalizedValue > MAX(self.maximumValue.floatValue, self.minimumValue.floatValue)) ? MAX(self.maximumValue.floatValue, self.minimumValue.floatValue) : normalizedValue;
+    normalizedValue = (normalizedValue < self.minimumValue.floatValue) ? self.minimumValue.floatValue : (normalizedValue > self.maximumValue.floatValue) ? self.maximumValue.floatValue : normalizedValue;
+    NSLog(@"normalizedValue %f", normalizedValue);
+    return [NSNumber numberWithDouble:normalizedValue];
+}
+
+- (void)setScaledValue:(NSNumber *)scaledValue
+{
+    NSLog(@"value %f", scaledValue.floatValue);
+    return objc_setAssociatedObject(self, @selector(scaledValue), scaledValue, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (NSNumber *)value
 {
 //    double normalizedValue = (MAX(self.maximumValue.floatValue, self.minimumValue.floatValue) - MIN(self.minimumValue.floatValue, self.maximumValue.floatValue)) * (self.bounds.origin.x - (fabs(CGRectGetMidX(self.frame) - CGRectGetMinX(self.frame))) / (self.contentSize.width - (fabs(CGRectGetMidX(self.frame) - CGRectGetMinX(self.frame))) + MIN(self.minimumValue.floatValue, self.maximumValue.floatValue)));
     double normalizedValue = self.maximumValue.floatValue * ((self.contentOffset.x + (fabs(CGRectGetMidX(self.frame) - CGRectGetMinX(self.frame)))) / self.contentSize.width);
 //    normalizedValue = (normalizedValue < MIN(self.minimumValue.floatValue, self.maximumValue.floatValue)) ? MIN(self.minimumValue.floatValue, self.maximumValue.floatValue) : (normalizedValue > MAX(self.maximumValue.floatValue, self.minimumValue.floatValue)) ? MAX(self.maximumValue.floatValue, self.minimumValue.floatValue) : normalizedValue;
     normalizedValue = (normalizedValue < self.minimumValue.floatValue) ? self.minimumValue.floatValue : (normalizedValue > self.maximumValue.floatValue) ? self.maximumValue.floatValue : normalizedValue;
-    
+    NSLog(@"normalizedValue %f", normalizedValue);
     return [NSNumber numberWithDouble:normalizedValue];
 }
 
@@ -56,5 +72,6 @@
     NSLog(@"value %f", value.floatValue);
     return objc_setAssociatedObject(self, @selector(value), value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+
 
 @end

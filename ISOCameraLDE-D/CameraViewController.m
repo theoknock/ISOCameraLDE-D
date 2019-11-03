@@ -127,17 +127,17 @@ static CameraProperty (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSA
     return cameraProperty;
 };
 
-static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton *(NSArray * cameraPropertyButtons)
-{
-    __block UIButton * selectedButton = nil;
-    [cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-        BOOL isSelected = [button isSelected];
-        if (isSelected) selectedButton = button;
-        *stop = isSelected;
-    }];
-    
-    return (selectedButton.tag != CameraPropertyRecord) ? selectedButton : nil;
-};
+//static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton *(NSArray * cameraPropertyButtons)
+//{
+//    __block UIButton * selectedButton = nil;
+//    [cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+//        BOOL isSelected = [button isSelected];
+//        if (isSelected) selectedButton = button;
+//        *stop = isSelected;
+//    }];
+//
+//    return (selectedButton.tag != CameraPropertyRecord) ? selectedButton : nil;
+//};
 
 - (UIButton *)buttonWithTag:(NSUInteger)tag
 {
@@ -402,7 +402,7 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 
 - (void)lockDevice
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //    NSLog(@"%s", __PRETTY_FUNCTION__);
     [self.videoDevice unlockForConfiguration];
     
     dispatch_async([self device_configuration_queue], ^{
@@ -852,11 +852,22 @@ static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton 
 //}
 
 - (IBAction)handleTapGesture:(UITapGestureRecognizer *)sender {
-    [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.buttons enumerateObjectsUsingBlock:^(UIButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        BOOL isPointInsideButtonRect;
+        if (obj.tag == CameraPropertyRecord)
+        {
+            if (!obj.isSelected)
+            {
+                [self toggleRecording:(UIButton *)obj];
+                isPointInsideButtonRect = TRUE;
+            }
+        }
+        
         CGRect convertedRect = [obj convertRect:[obj frame] toView:self.cameraControls];
-        BOOL isPointInsideButtonRect = CGRectContainsPoint(convertedRect, [sender locationInView:self.cameraControls]);
+        isPointInsideButtonRect = CGRectContainsPoint(convertedRect, [sender locationInView:self.cameraControls]);
         if (isPointInsideButtonRect && [(UIButton *)obj isSelected])
             [self cameraPropertyButtonEventHandler:(UIButton *)obj];
+        
         *stop = isPointInsideButtonRect;
     }];
 }
@@ -916,7 +927,7 @@ static float(^scaleSliderValue)(CGRect, CGFloat, float, float) = ^float(CGRect s
                 dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     float value = (float)dispatch_source_get_data(dispatch_source);
-                    NSLog(@"value: %f", value);
+                    //                    NSLog(@"value: %f", value);
                     CameraProperty property = (CameraProperty)self.lockedCameraPropertyButton.tag;
                     @try {
                         if (property == CameraPropertyLensPosition && [self.videoDevice isFocusModeSupported:AVCaptureFocusModeLocked])
@@ -999,7 +1010,7 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
         dispatch_semaphore_wait([self device_lock_semaphore], DISPATCH_TIME_FOREVER);
         dispatch_async(dispatch_get_main_queue(), ^{
             float value = [(ScaleSliderScrollView *)scrollView value].floatValue;
-            NSLog(@"value %f", value);
+            //            NSLog(@"value %f", value);
             CameraProperty property = (CameraProperty)self.lockedCameraPropertyButton.tag;
             @try {
                 if (property == CameraPropertyLensPosition && [self.videoDevice isFocusModeSupported:AVCaptureFocusModeLocked])
@@ -1011,7 +1022,7 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
                         }];
                 } else if (property == CameraPropertyISO) {
                     if (value != (double)CMTimeGetSeconds(self.videoDevice.exposureDuration)) {
-//                    if (![self.videoDevice isAdjustingExposure]) {
+                        //                    if (![self.videoDevice isAdjustingExposure]) {
                         [self willChangeValueForKey:@"self.ISO"];
                         float maxISO = self.videoDevice.activeFormat.maxISO;
                         float minISO = self.videoDevice.activeFormat.minISO;
@@ -1037,11 +1048,11 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
                 } else if (property == CameraPropertyExposureDuration) {
                     if (![self.videoDevice isAdjustingExposure]) {
                         [self willChangeValueForKey:@"videoDevice.exposureDuration"];
-//                        double minDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.minExposureDuration);
-//                        double maxDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.maxExposureDuration);
-//                        // Map from duration to non-linear UI range 0-1
-//                        float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
-//                        //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
+                        //                        double minDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.minExposureDuration);
+                        //                        double maxDurationSeconds = CMTimeGetSeconds(self.videoDevice.activeFormat.maxExposureDuration);
+                        //                        // Map from duration to non-linear UI range 0-1
+                        //                        float exposureDuration = minDurationSeconds + (value * (maxDurationSeconds - minDurationSeconds));
+                        //                        //                    //NSLog(@"Exposure duration factor (%lu) value: %f", property, value);
                         double currentExposureDurationTimeScale = self.videoDevice.exposureDuration.timescale;
                         CMTime newExposureDuration = CMTimeMakeWithSeconds(value, currentExposureDurationTimeScale);
                         [self.videoDevice setExposureModeCustomWithDuration:newExposureDuration ISO:AVCaptureISOCurrent completionHandler:^(CMTime syncTime) {
@@ -1181,10 +1192,10 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
     AVCaptureVideoOrientation previewLayerVideoOrientation = previewLayer.connection.videoOrientation;
     dispatch_async(self.sessionQueue, ^{
         if (! self.movieFileOutput.isRecording) {
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle"] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-//                //[self.recordButton setTintColor:[UIColor whiteColor]];
-//            });
+            //            dispatch_async(dispatch_get_main_queue(), ^{
+            //                //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle"] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+            //                //[self.recordButton setTintColor:[UIColor whiteColor]];
+            //            });
             if ([UIDevice currentDevice].isMultitaskingSupported) {
                 self.backgroundRecordingID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
             }
@@ -1199,10 +1210,10 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
         }
         else {
             [self.movieFileOutput stopRecording];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle"] imageWithTintColor:[UIColor redColor]] forState:UIControlStateNormal];
-//                //[self.recordButton setTintColor:[UIColor redColor]];
-//            });
+            //            dispatch_async(dispatch_get_main_queue(), ^{
+            //                //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle"] imageWithTintColor:[UIColor redColor]] forState:UIControlStateNormal];
+            //                //[self.recordButton setTintColor:[UIColor redColor]];
+            //            });
             completionHandler(FALSE, nil);
         }
     });
@@ -1211,11 +1222,11 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
 {
     //NSLog(@"%s", __PRETTY_FUNCTION__);
-//    // Enable the Record button to let the user stop the recording
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle.fill"] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-//        //[self.recordButton setTintColor:[UIColor whiteColor]];
-//    });
+    //    // Enable the Record button to let the user stop the recording
+    //    dispatch_async(dispatch_get_main_queue(), ^{
+    //        //[self.recordButton setImage:[[UIImage systemImageNamed:@"stop.circle.fill"] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+    //        //[self.recordButton setTintColor:[UIColor whiteColor]];
+    //    });
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
@@ -1248,9 +1259,9 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
                     PHAssetCreationRequest *changeRequest = [PHAssetCreationRequest creationRequestForAsset];
                     [changeRequest addResourceWithType:PHAssetResourceTypeVideo fileURL:outputFileURL options:options];
                 } completionHandler:^(BOOL success, NSError *error) {
-//                    if (! success) {
-//                        //NSLog(@"Could not save movie to photo library: %@", error);
-//                    }
+                    //                    if (! success) {
+                    //                        //NSLog(@"Could not save movie to photo library: %@", error);
+                    //                    }
                     cleanup();
                 }];
             }
@@ -1263,6 +1274,12 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
         cleanup();
     }
 }
+
+static double (^percentageInRange)(double, double, double) = ^double(double value, double minimumValue, double maximumValue) {
+    float value_perc = ((value - minimumValue)) / (maximumValue - minimumValue);
+    
+    return value_perc;
+};
 
 - (IBAction)cameraPropertyButtonEventHandler:(UIButton *)sender
 {
@@ -1281,13 +1298,28 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
             [(UIView *)obj setHidden:!shouldSelectSender];
             [(UIView *)obj setNeedsDisplay];
         }];
-        if (!self.scaleSliderScrollView.isHidden)
-        {
-            NSArray<NSNumber *> * minMaxValues = [self cameraPropertyValueRange:senderButtonCameraProperty videoDevice:self.videoDevice];
-            [self.scaleSliderScrollView setMinimumValue:minMaxValues.firstObject];
-            [self.scaleSliderScrollView setMaximumValue:[NSNumber numberWithDouble:minMaxValues.firstObject.doubleValue + minMaxValues.lastObject.doubleValue]];
-            [self.scaleSliderScrollView setValue:[NSNumber numberWithDouble:cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty)]];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!self.scaleSliderScrollView.isHidden)
+            {
+                NSArray<NSNumber *> * minMaxValues = [self cameraPropertyValueRange:senderButtonCameraProperty videoDevice:self.videoDevice];
+                [self.scaleSliderScrollView setMinimumValue:minMaxValues.firstObject];
+                [self.scaleSliderScrollView setMaximumValue:[NSNumber numberWithDouble:minMaxValues.firstObject.doubleValue + minMaxValues.lastObject.doubleValue]];
+                [self.scaleSliderScrollView setValue:[NSNumber numberWithDouble:cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty)]];
+                // TO-DO:
+                // 1. Normalize (0%-100%) value using camera property minimum and maximum
+                float value_perc = percentageInRange(cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty), minMaxValues.firstObject.doubleValue, minMaxValues.lastObject.doubleValue);
+                NSLog(@"value_perc %f", value_perc);
+                // 2. Multiply by content size width
+                float contentOffsetX = value_perc * CGRectGetWidth(self.scaleSliderScrollView.frame);
+                NSLog(@"contentOffsetX %f", contentOffsetX);
+                
+                // 3. Add product to -207 (use left-right inset to generate)
+                contentOffsetX += 207;//fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
+                // 4. Set content offset x to sum
+                [self.scaleSliderScrollView setContentOffset:CGPointMake(contentOffsetX, 0.0) animated:TRUE];
+                // 621 > ContentOffset.x > -207
+            }
+        });
     });
 }
 
@@ -1297,7 +1329,7 @@ double (cameraPropertyFunc)(AVCaptureDevice *videoDevice, CameraProperty cameraP
     switch (cameraProperty) {
         case CameraPropertyExposureDuration:
         {
-            NSLog(@"%f %f", CMTimeGetSeconds(videoDevice.activeFormat.minExposureDuration), CMTimeGetSeconds(videoDevice.activeFormat.maxExposureDuration));
+            //            NSLog(@"%f %f", CMTimeGetSeconds(videoDevice.activeFormat.minExposureDuration), CMTimeGetSeconds(videoDevice.activeFormat.maxExposureDuration));
             propertyValueRange = @[@(CMTimeGetSeconds(videoDevice.activeFormat.minExposureDuration)), @(CMTimeGetSeconds(videoDevice.activeFormat.maxExposureDuration))];
             break;
         }

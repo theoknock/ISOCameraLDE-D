@@ -60,7 +60,7 @@
                                                   NSFontAttributeName:[UIFont systemFontOfSize:14.0],
                                                   NSParagraphStyleAttributeName:centerAlignedParagraphStyle};
     
-    NSString *valueString = [NSString stringWithFormat:@"%.2f", self.value.floatValue];
+    NSString *valueString = [NSString stringWithFormat:@"%.2f", self.scaledValue.floatValue];
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:valueString attributes:centerAlignedTextAttributes];
     ((CATextLayer *)scaleSliderValueTextLayer).string = attributedString;
 
