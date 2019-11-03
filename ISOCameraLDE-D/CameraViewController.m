@@ -119,9 +119,12 @@ static CameraProperty (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSA
 {
     __block CameraProperty cameraProperty = CameraPropertyInvalid;
     [cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-        BOOL isSelected = [button isSelected];
-        cameraProperty = (isSelected && [button tag] != CameraPropertyRecord) ? [button tag] : CameraPropertyInvalid;
-        *stop = isSelected;
+        if (!stop)
+        {
+                BOOL isSelected = [button isSelected];
+                cameraProperty = (isSelected && [button tag] != CameraPropertyRecord) ? [button tag] : CameraPropertyInvalid;
+                *stop = isSelected;
+        }
     }];
     
     return cameraProperty;
@@ -853,20 +856,14 @@ static CameraProperty (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSA
 
 - (IBAction)handleTapGesture:(UITapGestureRecognizer *)sender {
     [self.buttons enumerateObjectsUsingBlock:^(UIButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BOOL isPointInsideButtonRect;
-        if (obj.tag == CameraPropertyRecord)
-        {
-            if (!obj.isSelected)
-            {
-                [self toggleRecording:(UIButton *)obj];
-                isPointInsideButtonRect = TRUE;
-            }
-        }
         
+        BOOL isPointInsideButtonRect;
         CGRect convertedRect = [obj convertRect:[obj frame] toView:self.cameraControls];
         isPointInsideButtonRect = CGRectContainsPoint(convertedRect, [sender locationInView:self.cameraControls]);
-        if (isPointInsideButtonRect && [(UIButton *)obj isSelected])
+        if (isPointInsideButtonRect && [(UIButton *)obj isSelected] && [(UIButton *)obj tag] != CameraPropertyRecord)
             [self cameraPropertyButtonEventHandler:(UIButton *)obj];
+        else if (isPointInsideButtonRect && [(UIButton *)obj tag] == CameraPropertyRecord)
+            [self toggleRecording:obj];
         
         *stop = isPointInsideButtonRect;
     }];
@@ -1314,9 +1311,9 @@ static double (^percentageInRange)(double, double, double) = ^double(double valu
                 NSLog(@"contentOffsetX %f", contentOffsetX);
                 
                 // 3. Add product to -207 (use left-right inset to generate)
-                contentOffsetX += 207;//fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
+                contentOffsetX -= 207;//fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
                 // 4. Set content offset x to sum
-                [self.scaleSliderScrollView setContentOffset:CGPointMake(contentOffsetX, 0.0) animated:TRUE];
+                [self.scaleSliderScrollView setContentOffset:CGPointMake(contentOffsetX, 0.0) animated:FALSE];
                 // 621 > ContentOffset.x > -207
             }
         });
