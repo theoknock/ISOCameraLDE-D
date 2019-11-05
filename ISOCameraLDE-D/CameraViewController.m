@@ -1323,16 +1323,15 @@ static double (^percentageInRange)(double, double, double) = ^double(double valu
     dispatch_async(dispatch_get_main_queue(), ^{
         cameraPropertyForSelectedButtonInIBOutletCollection(self.cameraPropertyButtons, ^(CameraProperty selectedButtonCameraProperty) {
             BOOL hideScaleSlider = (selectedButtonCameraProperty != CameraPropertyInvalid) ? (selectedButtonCameraProperty != (CameraProperty)sender.tag) ? self.scaleSliderScrollView.hidden : FALSE : TRUE;
-            
             [self.scaleSliderControlViews enumerateObjectsUsingBlock:^(typeof(UIView *)  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 [(UIView *)obj setHidden:hideScaleSlider];
                 [(UIView *)obj setNeedsDisplay];
             }];
             
-            [sender setHighlighted:!hideScaleSlider];
-            [sender setSelected:!hideScaleSlider];
+            [sender setHighlighted:hideScaleSlider];
+            [sender setSelected:hideScaleSlider];
             
-            self.lockedCameraPropertyButton = (hideScaleSlider) ? sender : nil;
+            self.lockedCameraPropertyButton = (hideScaleSlider) ? nil : sender;
         
                 if (!self.scaleSliderScrollView.isHidden)
                 {
@@ -1343,10 +1342,10 @@ static double (^percentageInRange)(double, double, double) = ^double(double valu
                     NSArray<NSNumber *> * minMaxValues = [self cameraPropertyValueRange:(CameraProperty)sender.tag videoDevice:self.videoDevice];
                     [self.scaleSliderScrollView setMinimumValue:minMaxValues.firstObject];
                     [self.scaleSliderScrollView setMaximumValue:[NSNumber numberWithDouble:minMaxValues.firstObject.doubleValue + minMaxValues.lastObject.doubleValue]];
-                    [self.scaleSliderScrollView setValue:[NSNumber numberWithDouble:cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty)]];
+                    [self.scaleSliderScrollView setValue:[NSNumber numberWithDouble:cameraPropertyFunc(self.videoDevice, (CameraProperty)sender.tag)]];
                     // TO-DO:
                     // 1. Normalize (0%-100%) value using camera property minimum and maximum
-                    float value_perc = percentageInRange(cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty), minMaxValues.firstObject.doubleValue, minMaxValues.lastObject.doubleValue);
+                    float value_perc = percentageInRange(cameraPropertyFunc(self.videoDevice, (CameraProperty)sender.tag), minMaxValues.firstObject.doubleValue, minMaxValues.lastObject.doubleValue);
                     NSLog(@"value_perc %f", value_perc);
                     // 2. Multiply by content size width
                     CGFloat midWidth = fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
@@ -1361,7 +1360,6 @@ static double (^percentageInRange)(double, double, double) = ^double(double valu
                     NSLog(@"contentOffsetX (actual) %f", self.scaleSliderScrollView.contentOffset.x);
                     // 621 > ContentOffset.x > -207
                 }
-            }
         });
     });
 }

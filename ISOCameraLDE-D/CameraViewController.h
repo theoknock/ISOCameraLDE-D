@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, CameraProperty) {
     CameraPropertyVideoZoomFactor,
 };
 
-@interface CameraViewController : UIViewController <ButtonCollectionViewDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate>
+@interface CameraViewController : UIViewController <ButtonCollectionViewDelegate, UIScrollViewDelegate>
 
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cameraPropertyButtons;
 @property (weak, nonatomic) IBOutlet CameraControls *cameraControls;

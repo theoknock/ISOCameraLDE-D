@@ -164,7 +164,7 @@
                         <action selector="toggleRecording:" destination="Y19-1Y-72S" eventType="touchUpInside" id="7UD-ZD-Pmy"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="3" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="564-wg-wTK" userLabel="3 - Exposure Duration">
+                <button opaque="NO" tag="3" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="564-wg-wTK" userLabel="3 - Exposure Duration">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -179,7 +179,7 @@
                         <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="IND-wX-qWR"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="4" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="Axk-Cc-qFi" userLabel="4 - ISO">
+                <button opaque="NO" tag="4" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="Axk-Cc-qFi" userLabel="4 - ISO">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="51.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -194,13 +194,13 @@
                         <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="gtB-CX-D8R"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="5" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="b1Y-dK-Ek8" userLabel="5 - Lens Position">
+                <button opaque="NO" tag="5" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="b1Y-dK-Ek8" userLabel="5 - Lens Position">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                     <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <state key="normal" image="circle" catalog="system" backgroundImage="viewfinder">
+                    <state key="normal" image="viewfinder.circle" catalog="system">
                         <color key="titleColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="42" scale="medium" weight="thin"/>
@@ -209,7 +209,7 @@
                         <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="BZQ-Jy-hEo"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="6" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="VLy-Kw-c75" userLabel="6 - Torch Level">
+                <button opaque="NO" tag="6" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="VLy-Kw-c75" userLabel="6 - Torch Level">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -224,7 +224,7 @@
                         <action selector="cameraPropertyButtonEventHandler:" destination="Y19-1Y-72S" eventType="touchUpInside" id="AK6-u3-e5t"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="7" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="IJy-J4-1w3" userLabel="7 - Zoom Factor">
+                <button opaque="NO" tag="7" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="tailTruncation" id="IJy-J4-1w3" userLabel="7 - Zoom Factor">
                     <rect key="frame" x="0.0" y="0.0" width="69" height="48.5"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -245,11 +245,10 @@
     </scenes>
     <resources>
         <image name="bolt.circle" catalog="system" width="64" height="60"/>
-        <image name="circle" catalog="system" width="64" height="60"/>
         <image name="magnifyingglass.circle" catalog="system" width="64" height="60"/>
         <image name="stop.circle" catalog="system" width="64" height="60"/>
         <image name="sun.max" catalog="system" width="64" height="62"/>
         <image name="timer" catalog="system" width="64" height="60"/>
-        <image name="viewfinder" catalog="system" width="64" height="56"/>
+        <image name="viewfinder.circle" catalog="system" width="64" height="60"/>
     </resources>
 </document>
