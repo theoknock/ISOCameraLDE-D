@@ -31,6 +31,8 @@ static NSString * const reuseIdentifier = @"ButtonCollectionViewCell";
     [self registerClass:[ButtonCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     self.dataSource = self;
     self.delegate = self;
+    
+//    [self setBackgroundColor:[UIColor darkGrayColor]];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -56,12 +58,17 @@ static NSString * const reuseIdentifier = @"ButtonCollectionViewCell";
     ButtonCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
    
     UIButton *button = [self.buttonCollectionViewDelegate buttonWithTag:(indexPath.item + 2)];
-    [button setFrame:cell.contentView.frame];
+                                                    
+    CGRect button_frame = CGRectMake(CGRectGetMidX(cell.contentView.frame) - CGRectGetMidX(button.frame), CGRectGetMaxY(cell.contentView.frame) - CGRectGetHeight(button.frame), CGRectGetMaxX(button.frame), CGRectGetHeight(button.frame));
+    [button setFrame:button_frame];
+//    [button setBackgroundColor:[UIColor grayColor]];
+//    [cell.contentView.layer setBorderWidth:0.25];
+//    [cell.contentView.layer setBorderColor:[UIColor systemBlueColor].CGColor];
+//    [cell setFrame:button_frame];
     [cell.contentView addSubview:button];
     
-//    [cell.contentView.layer setBorderColor:[UIColor whiteColor].CGColor];
-    [cell.contentView setBackgroundColor:[UIColor blackColor]];
-//    [cell.contentView.layer setBorderWidth:0.25];
+//    [cell.contentView setBackgroundColor:[UIColor blueColor]];
+//    [cell.contentView setNeedsDisplay];
 
     return cell;
 }

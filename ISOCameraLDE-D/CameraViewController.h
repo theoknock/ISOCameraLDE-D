@@ -15,7 +15,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, CameraProperty) {
     CameraPropertyInvalid,
     CameraPropertyPosition,
     CameraPropertyRecord,
@@ -24,7 +24,7 @@ typedef enum : NSUInteger {
     CameraPropertyLensPosition,
     CameraPropertyTorchLevel,
     CameraPropertyVideoZoomFactor,
-} CameraProperty;
+};
 
 @interface CameraViewController : UIViewController <ButtonCollectionViewDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate>
 

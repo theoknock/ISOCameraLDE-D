@@ -6,6 +6,32 @@
 //  Copyright © 2019 The Life of a Demoniac. All rights reserved.
 //
 
+// TO-DO: Create an icon of the camera aperture that compounds the exposure duration and ISO settings
+// into a singular visual representation. The major descriptive features will be the size
+// of the aperture's opening and the duration of its opening:
+
+// The aperture will open and close at a rate equivalent to the number of frames captured per second
+// per the exposure duration setting;
+
+// The difference between the border of the aperture and the size of the opening will approximate the ISO setting.
+
+// Representing these two seemingly disparate settings by a single image informs their shared relationship with
+// the camera aperture, and makes distinct their otherwise seemingly identical effect on image brightness.
+// The icon underscores the relevance of the aperture configuration to the process for acquiring samples and emphasizes the importance of determining optimal
+// configuration
+
+// Pattern icons from these SF Symbols:
+// circle
+// circle.fill
+// largecircle.fill.circle
+// smallcircle.fill.circle
+// smallcircle.fill.circle.fill
+// smallcircle.circle
+// smallcircle.circle.fill
+
+// TO-DO: Use the circle and viewfinder SF Symbols as the image and background image (respectively) as the lens position camera property button icon.
+// Adjust the size of the viewfinder image per the lens position.
+
 @import AVFoundation;
 @import Photos;
 @import CoreText;
@@ -113,21 +139,16 @@ typedef NS_ENUM(NSInteger, AVCamManualSetupResult) {
     //    //    [self.scaleSliderScrollView setFrame:self.cameraControls.frame];
 }
 
+typedef void (^CameraPropertyCallback)(CameraProperty selectedButtonCameraProperty);
 
-
-static CameraProperty (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSArray *) = ^ CameraProperty (NSArray * cameraPropertyButtons)
+static void (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSArray *, CameraPropertyCallback) = ^ (NSArray * cameraPropertyButtons, CameraPropertyCallback callback)
 {
-    __block CameraProperty cameraProperty = CameraPropertyInvalid;
     [cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton *  _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (!stop)
-        {
-                BOOL isSelected = [button isSelected];
-                cameraProperty = (isSelected && [button tag] != CameraPropertyRecord) ? [button tag] : CameraPropertyInvalid;
-                *stop = isSelected;
-        }
+        BOOL isSelected = [button isSelected];
+        CameraProperty cameraProperty = (isSelected && [button tag] != CameraPropertyRecord) ? [button tag] : CameraPropertyInvalid;
+        callback(cameraProperty);
+        *stop = isSelected;
     }];
-    
-    return cameraProperty;
 };
 
 //static UIButton * (^selectedButtonInIBOutletCollection)(NSArray *) = ^ UIButton *(NSArray * cameraPropertyButtons)
@@ -167,6 +188,11 @@ static CameraProperty (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSA
     
     //    [self.cameraControlsContainerView setDelegate:(id<CameraControlsDelegate> _Nullable)self];
     
+    [self.buttons makeObjectsPerformSelector:@selector(setReversesTitleShadowWhenHighlighted:) withObject:@(FALSE)];
+//    UIEdgeInsets contentInsets = UIEdgeInsetsMake(15, 5, 5, 5);
+//    NSValue *contentInsetsValue = [NSValue valueWithUIEdgeInsets:contentInsets];
+//    [self.buttons makeObjectsPerformSelector:@selector(setContentEdgeInsets:) withObject:contentInsetsValue];
+//    [self.buttons makeObjectsPerformSelector:@selector(setContentVerticalAlignment:) withObject:@(UIControlContentVerticalAlignmentBottom)];
     // Create the AVCaptureSession
     self.session = [[AVCaptureSession alloc] init];
     
@@ -854,20 +880,31 @@ static CameraProperty (^cameraPropertyForSelectedButtonInIBOutletCollection)(NSA
 //    };
 //}
 
-- (IBAction)handleTapGesture:(UITapGestureRecognizer *)sender {
-    [self.buttons enumerateObjectsUsingBlock:^(UIButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        BOOL isPointInsideButtonRect;
-        CGRect convertedRect = [obj convertRect:[obj frame] toView:self.cameraControls];
-        isPointInsideButtonRect = CGRectContainsPoint(convertedRect, [sender locationInView:self.cameraControls]);
-        if (isPointInsideButtonRect && [(UIButton *)obj isSelected] && [(UIButton *)obj tag] != CameraPropertyRecord)
-            [self cameraPropertyButtonEventHandler:(UIButton *)obj];
-        else if (isPointInsideButtonRect && [(UIButton *)obj tag] == CameraPropertyRecord)
-            [self toggleRecording:obj];
-        
-        *stop = isPointInsideButtonRect;
-    }];
-}
+//- (IBAction)handleTapGesture:(UITapGestureRecognizer *)sender {
+//    [self.buttons enumerateObjectsUsingBlock:^(UIButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        CGRect convertedRect = [obj convertRect:[obj frame] toView:self.scaleSliderScrollView];\
+//        BOOL isPointInsideButtonRect = CGRectContainsPoint(convertedRect, [sender locationInView:self.scaleSliderScrollView]);
+//
+//        if (isPointInsideButtonRect)
+//        {
+//            NSLog(@"Camera property %lu", (CameraProperty)obj.tag);
+//            NSLog(@"convertedRect: %f, %f, %f, %f", convertedRect.origin.x, convertedRect.origin.y, convertedRect.size.width, convertedRect.size.height);
+//            NSLog(@"[sender locationInView:self.scaleSliderScrollView] %f, %f", [sender locationInView:self.scaleSliderScrollView].x, [sender locationInView:self.scaleSliderScrollView].y);
+//
+//            if (((UIButton *)obj).tag == CameraPropertyRecord)
+//            {
+//                NSLog(@"RECORD");
+//                [self toggleRecording:obj];
+//            } else {
+//                NSLog(@"%lu", idx);
+//                [self cameraPropertyButtonEventHandler:(UIButton *)obj];
+//            }
+//        } else {
+////            NSLog(@"No");
+//        }
+//        *stop = isPointInsideButtonRect;
+//    }];
+//}
 
 - (void)displayValuesForCameraControlProperties
 {
@@ -1016,6 +1053,9 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
                     if (![self.videoDevice isAdjustingFocus] && (value != self.videoDevice.lensPosition))
                         [self.videoDevice setFocusModeLockedWithLensPosition:value completionHandler:^(CMTime syncTime) {
                             changedValueForKey(weakSelf, @"videoDevice.lensPosition");
+                            UIButton *lensPositionCameraPropertyButton = [self buttonWithTag:CameraPropertyLensPosition];
+                            UIImage *symbol = [[lensPositionCameraPropertyButton currentBackgroundImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:value weight:UIImageSymbolWeightUltraLight scale:UIImageSymbolScaleSmall]];
+                            [lensPositionCameraPropertyButton setBackgroundImage:symbol forState:UIControlStateNormal];
                         }];
                 } else if (property == CameraPropertyISO) {
                     if (value != (double)CMTimeGetSeconds(self.videoDevice.exposureDuration)) {
@@ -1060,7 +1100,7 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
             } @catch (NSException *exception) {
                 //NSLog(@"Error configuring device:\t%@", exception.description);
             } @finally {
-                
+                [scrollView setValue:@(value)];
             }
         });
     });
@@ -1280,43 +1320,47 @@ static double (^percentageInRange)(double, double, double) = ^double(double valu
 
 - (IBAction)cameraPropertyButtonEventHandler:(UIButton *)sender
 {
-    CameraProperty selectedButtonCameraProperty = ([sender isSelected]) ? (CameraProperty)[sender tag] : cameraPropertyForSelectedButtonInIBOutletCollection(self.buttons);
-    CameraProperty senderButtonCameraProperty = (CameraProperty)[sender tag];
-    BOOL senderButtonCameraPropertyEqualsSelectedButtonCameraProperty = (senderButtonCameraProperty == selectedButtonCameraProperty) ? TRUE : FALSE;
-    BOOL shouldSelectSender = (!senderButtonCameraPropertyEqualsSelectedButtonCameraProperty && (selectedButtonCameraProperty == CameraPropertyInvalid)) ? TRUE : FALSE;
-    
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.lockedCameraPropertyButton = (shouldSelectSender) ? sender : nil; //requestButtonInIBOutletCollectionWithCameraProperty(self.cameraPropertyButtons, senderButtonCameraProperty) : nil;
-        [sender setSelected:shouldSelectSender];
-        [sender setHighlighted:shouldSelectSender];
-        //        UIImage *symbol = (shouldSelectSender) ? [[(UIButton *)sender currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleLargeTitle]] : [[(UIButton *)sender currentImage] imageByApplyingSymbolConfiguration:[UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleSmall]];
-        //        [(UIButton *)sender setImage:symbol forState:UIControlStateNormal];
-        [self.scaleSliderControlViews enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [(UIView *)obj setHidden:!shouldSelectSender];
-            [(UIView *)obj setNeedsDisplay];
-        }];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!self.scaleSliderScrollView.isHidden)
-            {
-                NSArray<NSNumber *> * minMaxValues = [self cameraPropertyValueRange:senderButtonCameraProperty videoDevice:self.videoDevice];
-                [self.scaleSliderScrollView setMinimumValue:minMaxValues.firstObject];
-                [self.scaleSliderScrollView setMaximumValue:[NSNumber numberWithDouble:minMaxValues.firstObject.doubleValue + minMaxValues.lastObject.doubleValue]];
-                [self.scaleSliderScrollView setValue:[NSNumber numberWithDouble:cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty)]];
-                // TO-DO:
-                // 1. Normalize (0%-100%) value using camera property minimum and maximum
-                float value_perc = percentageInRange(cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty), minMaxValues.firstObject.doubleValue, minMaxValues.lastObject.doubleValue);
-                NSLog(@"value_perc %f", value_perc);
-                // 2. Multiply by content size width
-                float contentOffsetX = self.scaleSliderScrollView.contentSize.width * (value_perc * .01); //CGRectGetWidth(self.scaleSliderScrollView.frame);
-                
-                
-                // 3. Add product to -207 (use left-right inset to generate)
-                contentOffsetX = contentOffsetX - fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
-                // 4. Set content offset x to sum
-                NSLog(@"contentOffsetX %f", contentOffsetX);
-                [self.scaleSliderScrollView setContentOffset:CGPointMake(contentOffsetX, self.scaleSliderScrollView.contentOffset.y) animated:FALSE];
-                NSLog(@"contentOffsetX (actual) %f", self.scaleSliderScrollView.contentOffset.x);
-                // 621 > ContentOffset.x > -207
+        cameraPropertyForSelectedButtonInIBOutletCollection(self.cameraPropertyButtons, ^(CameraProperty selectedButtonCameraProperty) {
+            BOOL hideScaleSlider = (selectedButtonCameraProperty != CameraPropertyInvalid) ? (selectedButtonCameraProperty != (CameraProperty)sender.tag) ? self.scaleSliderScrollView.hidden : FALSE : TRUE;
+            
+            [self.scaleSliderControlViews enumerateObjectsUsingBlock:^(typeof(UIView *)  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [(UIView *)obj setHidden:hideScaleSlider];
+                [(UIView *)obj setNeedsDisplay];
+            }];
+            
+            [sender setHighlighted:!hideScaleSlider];
+            [sender setSelected:!hideScaleSlider];
+            
+            self.lockedCameraPropertyButton = (hideScaleSlider) ? sender : nil;
+        
+                if (!self.scaleSliderScrollView.isHidden)
+                {
+                    // Create a UIButton category that contains the min and max value ranges properties to eliminate look-up; configure once on launch (not every time a button is touched)
+                    // the scroll view can get the values from the lockedCameraPropertyButton property at the time the lockedCameraPropertyButton is set
+                    // Also, add a value property that is set by observing changes to another property (or that is an accessor method or block to the value of another property)
+                    // (the min and max values should actually be an accessor method or block to the value of its associated property's min and max properties (just like specifying a data source)
+                    NSArray<NSNumber *> * minMaxValues = [self cameraPropertyValueRange:(CameraProperty)sender.tag videoDevice:self.videoDevice];
+                    [self.scaleSliderScrollView setMinimumValue:minMaxValues.firstObject];
+                    [self.scaleSliderScrollView setMaximumValue:[NSNumber numberWithDouble:minMaxValues.firstObject.doubleValue + minMaxValues.lastObject.doubleValue]];
+                    [self.scaleSliderScrollView setValue:[NSNumber numberWithDouble:cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty)]];
+                    // TO-DO:
+                    // 1. Normalize (0%-100%) value using camera property minimum and maximum
+                    float value_perc = percentageInRange(cameraPropertyFunc(self.videoDevice, senderButtonCameraProperty), minMaxValues.firstObject.doubleValue, minMaxValues.lastObject.doubleValue);
+                    NSLog(@"value_perc %f", value_perc);
+                    // 2. Multiply by content size width
+                    CGFloat midWidth = fabs(CGRectGetMidX(self.scaleSliderScrollView.frame) - CGRectGetMinX(self.scaleSliderScrollView.frame));
+                    float contentOffsetX = (CGRectGetMaxX(self.scaleSliderScrollView.frame)) - midWidth;
+                    
+                    
+                    // 3. Add product to -207 (use left-right inset to generate)
+                    contentOffsetX = contentOffsetX  * (value_perc * .01);
+                    // 4. Set content offset x to sum
+                    NSLog(@"contentOffsetX %f", contentOffsetX);
+                    [self.scaleSliderScrollView setContentOffset:CGPointMake(contentOffsetX, self.scaleSliderScrollView.frame.origin.y) animated:FALSE];
+                    NSLog(@"contentOffsetX (actual) %f", self.scaleSliderScrollView.contentOffset.x);
+                    // 621 > ContentOffset.x > -207
+                }
             }
         });
     });

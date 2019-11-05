@@ -14,7 +14,7 @@
 {
     [super awakeFromNib];
     
-    [self setContentInset:UIEdgeInsetsMake(CGRectGetMinY(self.frame), [self inset], CGRectGetMaxY(self.frame), [self inset])];
+    [self setContentInset:UIEdgeInsetsMake(0.0, [self inset], 0.0, [self inset])];
     
     scaleSliderValueTextLayer = [CATextLayer new];
     [self attributesForTextLayer:scaleSliderValueTextLayer];
