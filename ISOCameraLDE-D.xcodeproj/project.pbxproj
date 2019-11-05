@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B991FEDC235CCA1A00021686 /* ButtonCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = B991FEDB235CCA1A00021686 /* ButtonCollectionView.m */; };
 		B991FEDF235CCDA600021686 /* ButtonCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B991FEDE235CCDA600021686 /* ButtonCollectionViewCell.m */; };
+		B992E5142371827F00167CEA /* UIButton+Value.m in Sources */ = {isa = PBXBuildFile; fileRef = B992E5132371827F00167CEA /* UIButton+Value.m */; };
 		B99AA86523548A8400274D3D /* ScaleSliderScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */; };
 		B99AA8682354E12500274D3D /* CameraControls.m in Sources */ = {isa = PBXBuildFile; fileRef = B99AA8672354E12500274D3D /* CameraControls.m */; };
 		B9AE5A7A2360781500E2EB57 /* UIScrollView+Value.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AE5A792360781500E2EB57 /* UIScrollView+Value.m */; };
@@ -29,6 +30,8 @@
 		B991FEDB235CCA1A00021686 /* ButtonCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ButtonCollectionView.m; sourceTree = "<group>"; };
 		B991FEDD235CCDA600021686 /* ButtonCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ButtonCollectionViewCell.h; sourceTree = "<group>"; };
 		B991FEDE235CCDA600021686 /* ButtonCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ButtonCollectionViewCell.m; sourceTree = "<group>"; };
+		B992E5122371827F00167CEA /* UIButton+Value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+Value.h"; sourceTree = "<group>"; };
+		B992E5132371827F00167CEA /* UIButton+Value.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Value.m"; sourceTree = "<group>"; };
 		B99AA86323548A8400274D3D /* ScaleSliderScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScaleSliderScrollView.h; sourceTree = "<group>"; };
 		B99AA86423548A8400274D3D /* ScaleSliderScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScaleSliderScrollView.m; sourceTree = "<group>"; };
 		B99AA8662354E12500274D3D /* CameraControls.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CameraControls.h; sourceTree = "<group>"; };
@@ -110,6 +113,8 @@
 				B9D12BBD235403C50017DD25 /* CameraView.m */,
 				B99AA8662354E12500274D3D /* CameraControls.h */,
 				B99AA8672354E12500274D3D /* CameraControls.m */,
+				B992E5122371827F00167CEA /* UIButton+Value.h */,
+				B992E5132371827F00167CEA /* UIButton+Value.m */,
 				B9D12BC1235403C50017DD25 /* ScaleSliderControlView.h */,
 				B9D12BC5235403C50017DD25 /* ScaleSliderControlView.m */,
 				B991FEEA235E75AA00021686 /* Stationary Slider View */,
@@ -199,6 +204,7 @@
 				B9D12BD5235403C60017DD25 /* CameraViewController.m in Sources */,
 				B9AE5A7A2360781500E2EB57 /* UIScrollView+Value.m in Sources */,
 				B99AA8682354E12500274D3D /* CameraControls.m in Sources */,
+				B992E5142371827F00167CEA /* UIButton+Value.m in Sources */,
 				B9D12BD2235403C60017DD25 /* ScaleSliderControlView.m in Sources */,
 				B9D12BA1235402F30017DD25 /* AppDelegate.m in Sources */,
 				B991FEDF235CCDA600021686 /* ButtonCollectionViewCell.m in Sources */,

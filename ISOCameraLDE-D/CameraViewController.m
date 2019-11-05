@@ -38,6 +38,7 @@
 
 #import "CameraViewController.h"
 #import "CameraView.h"
+#import "UIButton+Value.h"
 
 
 static NSString * const reuseIdentifier = @"CameraPropertyButtonCell";
@@ -125,6 +126,13 @@ typedef NS_ENUM(NSInteger, AVCamManualSetupResult) {
     [super awakeFromNib];
     
     [self.buttonCollectionView setButtonCollectionViewDelegate:(id<ButtonCollectionViewDelegate> _Nullable)self];
+    
+    [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSArray<NSNumber *> * minMaxValuesArray = [self cameraPropertyValueRange:(CameraProperty)(idx + 3) videoDevice:self.videoDevice];
+        [button setMinimumValue:minMaxValuesArray.firstObject];
+        [button setMaximumValue:minMaxValuesArray.lastObject];
+        [button setValue:@(cameraPropertyFunc(self.videoDevice, (CameraProperty)(idx + 3)))];
+    }];
     
     //    [(ScaleSliderControlView*)self.scaleSliderControlView  setDelegate:(id<ScaleSliderControlViewDelegate>)self];
     //    [(ScaleSliderOverlayView *)self.scaleSliderOverlayView setDelegate:(id<ScaleSliderOverlayViewDelegate> _Nullable)self];
@@ -1406,7 +1414,11 @@ static double (^percentageInRange)(double, double, double) = ^double(double valu
 
 - (void)setLockedCameraButton:(UIButton *)lockedCameraButton
 {
-    self->_lockedCameraButton = lockedCameraButton;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [lockedCameraButton setValue:@(cameraPropertyFunc(self.videoDevice, (CameraProperty)lockedCameraButton.tag))];
+        [lockedCameraButton setTitle:[NSString stringWithFormat:@"%.1f", lockedCameraButton.value.doubleValue] forState:UIControlStateNormal];
+        self->_lockedCameraButton = lockedCameraButton;
+    });
 }
 
 @end
