@@ -38,12 +38,6 @@
 
 #import "CameraViewController.h"
 #import "CameraView.h"
-#import "UIButton+Value.h"
-
-
-static NSString * const reuseIdentifier = @"CameraPropertyButtonCell";
-
-#define DISPATCH_CONFIGURATION_QUEUE_TIMEOUT (1.0 * NSEC_PER_SEC)
 
 typedef NS_ENUM(NSInteger, AVCamManualSetupResult) {
     AVCamManualSetupResultSuccess,
@@ -59,7 +53,6 @@ typedef NS_ENUM(NSInteger, AVCamManualSetupResult) {
 @interface CameraViewController () <AVCaptureFileOutputRecordingDelegate>
 
 @property (weak, nonatomic) IBOutlet CameraView *cameraView;
-//@property (strong, nonatomic) CameraPropertyDispatchSource *dispatcher;
 
 
 // Session management
@@ -126,18 +119,6 @@ typedef NS_ENUM(NSInteger, AVCamManualSetupResult) {
     [super awakeFromNib];
     
     [self.buttonCollectionView setButtonCollectionViewDelegate:(id<ButtonCollectionViewDelegate> _Nullable)self];
-    
-    [self.cameraPropertyButtons enumerateObjectsUsingBlock:^(UIButton * _Nonnull button, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSArray<NSNumber *> * minMaxValuesArray = [self cameraPropertyValueRange:(CameraProperty)(idx + 3) videoDevice:self.videoDevice];
-        [button setMinimumValue:minMaxValuesArray.firstObject];
-        [button setMaximumValue:minMaxValuesArray.lastObject];
-        [button setValue:@(cameraPropertyFunc(self.videoDevice, (CameraProperty)(idx + 3)))];
-    }];
-    
-    //    [(ScaleSliderControlView*)self.scaleSliderControlView  setDelegate:(id<ScaleSliderControlViewDelegate>)self];
-    //    [(ScaleSliderOverlayView *)self.scaleSliderOverlayView setDelegate:(id<ScaleSliderOverlayViewDelegate> _Nullable)self];
-    
-    //    [self.scaleSliderControlView addObserver:self forKeyPath:@"hidden" options:NSKeyValueObservingOptionNew context:nil];
     
     //    CGFloat frameMinX  =    -(CGRectGetMidX(self.scaleSliderScrollView.frame));
     //    CGFloat frameMaxX  =      CGRectGetMaxX(self.scaleSliderScrollView.frame) + fabs(CGRectGetMidX(self.scaleSliderScrollView.frame));
@@ -1045,6 +1026,10 @@ void (^changedValueForKey)(__weak __typeof__ (CameraViewController *), NSString 
     [s_self didChangeValueForKey:key];
 };
 
+// Set the value of the specified camera property to the value of the scrollview x position
+// Returns the equivalent value for the property specified for display by the scrollview
+typedef float(^configureProperty)(CameraProperty, float);
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     __weak __typeof__(CameraViewController *) weakSelf = (CameraViewController *)self;
@@ -1415,8 +1400,7 @@ static double (^percentageInRange)(double, double, double) = ^double(double valu
 - (void)setLockedCameraButton:(UIButton *)lockedCameraButton
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [lockedCameraButton setValue:@(cameraPropertyFunc(self.videoDevice, (CameraProperty)lockedCameraButton.tag))];
-        [lockedCameraButton setTitle:[NSString stringWithFormat:@"%.1f", lockedCameraButton.value.doubleValue] forState:UIControlStateNormal];
+//        [lockedCameraButton setTitle:[NSString stringWithFormat:@"%.1f", lockedCameraButton.value.doubleValue] forState:UIControlStateNormal];
         self->_lockedCameraButton = lockedCameraButton;
     });
 }
